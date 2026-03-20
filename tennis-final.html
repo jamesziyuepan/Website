@@ -1,0 +1,3088 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎾 网球教练平台 · DC/MD/VA</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --green: #1a6b3a;
+  --green2: #2d9a57;
+  --green-light: #e8f5e9;
+  --green-mid: #52b788;
+  --sidebar-w: 220px;
+  --bg: #f0f2f5;
+  --card: #ffffff;
+  --text: #1a1a1a;
+  --sub: #555;
+  --mute: #999;
+  --border: #e8e8e8;
+  --amber: #f59e0b;
+  --red: #e53935;
+  --radius: 14px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Noto Sans SC', sans-serif;
+  background: var(--bg);
+  min-height: 100vh;
+  display: flex;
+  color: var(--text);
+  overflow: hidden;
+  height: 100vh;
+}
+
+/* ─── SIDEBAR ─── */
+.sidebar {
+  width: var(--sidebar-w);
+  background: linear-gradient(180deg, #0a2e1a 0%, #0d3b23 60%, #1a5c38 100%);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+  z-index: 10;
+}
+
+.sidebar-logo {
+  padding: 28px 20px 24px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.logo-icon {
+  width: 42px; height: 42px;
+  background: linear-gradient(135deg, #2d9a57, #52b788);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+  margin-bottom: 10px;
+  box-shadow: 0 4px 14px rgba(45,154,87,0.35);
+}
+
+.logo-title {
+  color: white;
+  font-size: 15px;
+  font-weight: 900;
+  line-height: 1.3;
+}
+
+.logo-sub {
+  color: rgba(255,255,255,0.5);
+  font-size: 11px;
+  margin-top: 2px;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 16px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  overflow-y: auto;
+}
+
+.nav-section-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.3);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 12px 8px 6px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  color: rgba(255,255,255,0.65);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.18s;
+  user-select: none;
+}
+
+.nav-item:hover {
+  background: rgba(255,255,255,0.08);
+  color: white;
+}
+
+.nav-item.active {
+  background: rgba(255,255,255,0.15);
+  color: white;
+  font-weight: 700;
+}
+
+.nav-icon { font-size: 18px; flex-shrink: 0; }
+
+.nav-badge {
+  margin-left: auto;
+  background: var(--green2);
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 8px;
+  min-width: 18px;
+  text-align: center;
+}
+
+.sidebar-footer {
+  padding: 16px 12px 20px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+.user-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.user-card:hover { background: rgba(255,255,255,0.08); }
+
+.user-avatar {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2d9a57, #52b788);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.user-name { color: white; font-size: 13px; font-weight: 700; }
+.user-level { color: rgba(255,255,255,0.45); font-size: 10px; }
+
+/* ─── MAIN CONTENT ─── */
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  height: 100vh;
+}
+
+/* Top header bar */
+.topbar {
+  background: white;
+  border-bottom: 1px solid var(--border);
+  padding: 0 28px;
+  height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.topbar-title {
+  font-size: 18px;
+  font-weight: 900;
+  color: var(--text);
+}
+
+.topbar-breadcrumb {
+  font-size: 12px;
+  color: var(--mute);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 2px;
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.topbar-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 7px 14px;
+  font-size: 13px;
+  color: var(--mute);
+  cursor: text;
+  min-width: 200px;
+}
+
+.topbar-btn {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.topbar-btn:hover { background: var(--green-light); }
+
+/* Page content */
+.page-body {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 24px 28px;
+}
+.page-body::-webkit-scrollbar { width: 6px; }
+.page-body::-webkit-scrollbar-track { background: transparent; }
+.page-body::-webkit-scrollbar-thumb { background: #ddd; border-radius: 3px; }
+
+/* ─── PANELS ─── */
+.panel { display: none; }
+.panel.active { display: block; }
+
+/* ─── HOME PANEL ─── */
+.home-hero-banner {
+  background: linear-gradient(135deg, #0d3b23 0%, #1a6b3a 50%, #2d9a57 100%);
+  border-radius: 20px;
+  padding: 32px 36px;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+.home-hero-banner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(45deg, rgba(255,255,255,0.02) 0, rgba(255,255,255,0.02) 1px, transparent 0, transparent 28px);
+}
+
+.hero-greeting { color: rgba(255,255,255,0.7); font-size: 14px; margin-bottom: 6px; }
+.hero-title { color: white; font-size: 32px; font-weight: 900; line-height: 1.2; margin-bottom: 20px; }
+
+.hero-stats {
+  display: flex;
+  gap: 32px;
+}
+
+.hero-stat-num { color: white; font-size: 26px; font-weight: 900; }
+.hero-stat-lbl { color: rgba(255,255,255,0.6); font-size: 11px; margin-top: 2px; }
+
+.hero-ball {
+  position: absolute;
+  right: 36px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 80px;
+  opacity: 0.15;
+}
+
+/* Stats strip */
+.stats-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  background: white;
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-shadow: 0 1px 8px rgba(0,0,0,0.06);
+}
+
+.stat-card-icon {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.stat-card-icon.green { background: var(--green-light); }
+.stat-card-icon.amber { background: #fef3c7; }
+.stat-card-icon.blue { background: #dbeafe; }
+.stat-card-icon.purple { background: #ede9fe; }
+
+.stat-card-val { font-size: 22px; font-weight: 900; color: var(--text); }
+.stat-card-lbl { font-size: 11px; color: var(--mute); margin-top: 1px; }
+
+/* Section headers */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.section-title { font-size: 16px; font-weight: 800; color: var(--text); }
+.section-link {
+  font-size: 12px;
+  color: var(--green);
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+/* Coach grid */
+.coach-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.coach-card-wide {
+  background: white;
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.coach-card-wide:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+}
+
+.coach-img-wrap {
+  height: 140px;
+  position: relative;
+  overflow: hidden;
+}
+
+.coach-img-wrap img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  object-position: center 10%;
+}
+
+.coach-img-placeholder {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 40px;
+  opacity: 0.4;
+}
+
+.coach-badge {
+  position: absolute;
+  bottom: 8px; left: 8px;
+  background: white;
+  color: var(--green);
+  font-size: 9px; font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 8px;
+}
+
+.coach-price-tag {
+  position: absolute;
+  bottom: 8px; right: 8px;
+  background: rgba(0,0,0,0.55);
+  color: white;
+  font-size: 11px; font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 8px;
+  backdrop-filter: blur(4px);
+}
+
+.coach-card-body { padding: 10px 12px 12px; }
+.coach-card-name { font-size: 14px; font-weight: 800; margin-bottom: 2px; }
+.coach-card-sub { font-size: 10px; color: var(--mute); margin-bottom: 6px; }
+
+.coach-tags {
+  display: flex; gap: 4px; flex-wrap: wrap;
+}
+
+.ctag {
+  background: var(--green-light);
+  color: var(--green);
+  font-size: 9px; font-weight: 600;
+  padding: 2px 6px; border-radius: 5px;
+}
+
+.lang-tag {
+  background: #dbeafe;
+  color: #1d4ed8;
+  font-size: 9px; font-weight: 600;
+  padding: 2px 6px; border-radius: 5px;
+}
+
+/* ─── COACH LIST PANEL ─── */
+.coach-list-filters {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.filter-group {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.filter-chip {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px; font-weight: 600;
+  cursor: pointer;
+  border: 1.5px solid var(--border);
+  color: var(--sub);
+  background: white;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.filter-chip.active {
+  background: var(--green);
+  color: white;
+  border-color: var(--green);
+}
+
+.search-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: white;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 8px 14px;
+  margin-left: auto;
+}
+
+.search-input-wrap input {
+  border: none; outline: none;
+  font-size: 13px; color: var(--text);
+  background: transparent;
+  min-width: 180px;
+}
+
+.coach-list-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+/* ─── COACH PROFILE PANEL ─── */
+.profile-layout {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.profile-sidebar-card {
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  position: sticky;
+  top: 0;
+}
+
+.profile-hero-img {
+  height: 220px;
+  position: relative;
+  overflow: hidden;
+}
+
+.profile-hero-img img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  object-position: center 10%;
+}
+
+.profile-hero-placeholder {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 60px; opacity: 0.4;
+}
+
+.profile-info { padding: 20px; }
+.profile-name { font-size: 22px; font-weight: 900; margin-bottom: 4px; }
+.profile-subtitle { font-size: 12px; color: var(--mute); margin-bottom: 14px; }
+.profile-price { color: var(--green); font-size: 24px; font-weight: 900; margin-bottom: 16px; }
+
+.profile-meta-chips {
+  display: flex; flex-direction: column; gap: 6px;
+  margin-bottom: 20px;
+}
+
+.profile-meta-chip {
+  font-size: 12px; color: var(--sub);
+  display: flex; align-items: center; gap: 6px;
+}
+
+.profile-cta-btns {
+  display: flex; gap: 8px;
+}
+
+.btn-primary-cta {
+  flex: 2; padding: 12px;
+  background: linear-gradient(135deg, var(--green), var(--green2));
+  color: white; border: none;
+  border-radius: 12px;
+  font-size: 13px; font-weight: 700;
+  cursor: pointer; font-family: inherit;
+  box-shadow: 0 4px 14px rgba(26,107,58,0.3);
+  transition: opacity 0.15s;
+}
+
+.btn-secondary-cta {
+  flex: 1; padding: 12px;
+  background: var(--green-light);
+  color: var(--green); border: none;
+  border-radius: 12px;
+  font-size: 13px; font-weight: 700;
+  cursor: pointer; font-family: inherit;
+  transition: opacity 0.15s;
+}
+
+.btn-primary-cta:hover, .btn-secondary-cta:hover { opacity: 0.85; }
+
+.profile-stats-row {
+  display: flex;
+  border-top: 1px solid var(--border);
+}
+
+.profile-stat {
+  flex: 1;
+  text-align: center;
+  padding: 14px 0;
+}
+
+.profile-stat-val { font-size: 20px; font-weight: 900; color: var(--text); }
+.profile-stat-lbl { font-size: 10px; color: var(--mute); margin-top: 2px; }
+.profile-stat-div { width: 1px; background: var(--border); margin: 8px 0; }
+
+/* Profile main content */
+.profile-main-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.content-card {
+  background: white;
+  border-radius: var(--radius);
+  padding: 22px;
+  box-shadow: 0 1px 8px rgba(0,0,0,0.06);
+}
+
+.content-card-title {
+  font-size: 15px; font-weight: 700;
+  margin-bottom: 14px;
+  display: flex; align-items: center; gap: 6px;
+}
+
+.ach-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 10px 12px;
+  background: #f9fafb;
+  border-radius: 10px;
+  border-left: 3px solid var(--green);
+  margin-bottom: 8px;
+}
+
+.ach-icon { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+.ach-text { font-size: 12px; color: #333; line-height: 1.5; }
+
+.spec-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+.spec-tag {
+  background: var(--green-light);
+  color: var(--green);
+  font-size: 11px; font-weight: 600;
+  padding: 5px 12px; border-radius: 8px;
+}
+
+.pricing-table { width: 100%; }
+.pricing-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--bg);
+}
+.pricing-row:last-child { border-bottom: none; }
+.pricing-name { font-size: 14px; font-weight: 600; }
+.pricing-desc { font-size: 11px; color: var(--mute); margin-top: 2px; }
+.pricing-price { font-size: 18px; font-weight: 900; color: var(--green); }
+
+/* Time availability */
+.week-row {
+  display: flex; gap: 8px;
+  margin-bottom: 16px;
+}
+
+.day-cell {
+  display: flex; flex-direction: column;
+  align-items: center; gap: 5px;
+}
+
+.day-lbl { font-size: 10px; color: var(--mute); }
+
+.day-dot {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 700;
+}
+
+.day-on { background: var(--green); color: white; }
+.day-off { background: #f0f0f0; color: #ccc; }
+
+.time-slots { display: flex; flex-wrap: wrap; gap: 8px; }
+.t-slot {
+  padding: 8px 14px;
+  border-radius: 8px;
+  background: var(--green-light);
+  color: var(--green);
+  font-size: 12px; font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.t-slot:hover, .t-slot.selected { background: var(--green); color: white; }
+
+/* ─── BOOKING PANEL ─── */
+.booking-layout {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 24px;
+  align-items: start;
+}
+
+.booking-steps { display: flex; flex-direction: column; gap: 20px; }
+
+.bk-step-card {
+  background: white;
+  border-radius: var(--radius);
+  padding: 22px;
+  box-shadow: 0 1px 8px rgba(0,0,0,0.06);
+}
+
+.bk-step-head {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 16px;
+}
+
+.step-num {
+  width: 28px; height: 28px;
+  background: var(--green);
+  color: white;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 800;
+  flex-shrink: 0;
+}
+
+.step-lbl { font-size: 15px; font-weight: 700; }
+
+.type-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.type-card {
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex; flex-direction: column; gap: 4px;
+}
+
+.type-card:hover { border-color: var(--green-mid); }
+.type-card.selected { border-color: var(--green); background: var(--green-light); }
+
+.type-icon { font-size: 24px; margin-bottom: 4px; }
+.type-name { font-size: 13px; font-weight: 700; }
+.type-desc { font-size: 11px; color: var(--mute); }
+.type-price { font-size: 16px; font-weight: 900; color: var(--green); margin-top: 4px; }
+
+/* Calendar */
+.calendar-wrap { user-select: none; }
+.month-nav {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.m-label { font-size: 15px; font-weight: 700; }
+.m-arrow {
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  background: var(--bg);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; cursor: pointer;
+  transition: background 0.15s;
+}
+.m-arrow:hover { background: var(--green-light); }
+
+.week-head {
+  display: grid; grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  margin-bottom: 6px;
+}
+.w-lbl { font-size: 11px; color: var(--mute); padding: 4px 0; }
+
+.cal-grid {
+  display: grid; grid-template-columns: repeat(7, 1fr);
+  gap: 3px;
+}
+
+.cal-day {
+  aspect-ratio: 1;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.cal-day.today { background: var(--green-light); color: var(--green); font-weight: 700; }
+.cal-day.selected { background: var(--green); color: white; font-weight: 700; }
+.cal-day.available:hover { background: var(--green-light); }
+.cal-day.disabled { color: #ccc; cursor: default; }
+.cal-day.other-month { color: #ddd; cursor: default; }
+
+/* Time slots for booking */
+.time-slots-bk {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.t-slot-bk {
+  background: var(--green-light);
+  border: 1.5px solid transparent;
+  border-radius: 10px;
+  padding: 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.t-slot-bk span:first-child { display: block; font-size: 13px; font-weight: 700; color: var(--green); }
+.t-slot-bk span:last-child { display: block; font-size: 10px; color: var(--green-mid); margin-top: 2px; }
+.t-slot-bk:hover, .t-slot-bk.selected { background: var(--green); border-color: var(--green); }
+.t-slot-bk:hover span, .t-slot-bk.selected span { color: white !important; }
+.t-slot-bk.taken { background: #f0f0f0; cursor: default; }
+.t-slot-bk.taken span { color: #ccc !important; }
+
+/* Court cards */
+.court-card {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--bg);
+  cursor: pointer;
+}
+.court-card:last-child { border-bottom: none; }
+.court-card.selected .cc-name { color: var(--green); }
+.cc-name { font-size: 13px; font-weight: 600; display: block; margin-bottom: 2px; }
+.cc-addr { font-size: 11px; color: var(--mute); display: block; }
+.cc-area { display: inline-block; font-size: 10px; color: var(--green); background: var(--green-light); padding: 2px 8px; border-radius: 8px; font-weight: 600; margin-top: 4px; }
+.cc-check {
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; color: transparent;
+  flex-shrink: 0; transition: all 0.15s;
+}
+.cc-check.on { background: var(--green); border-color: var(--green); color: white; }
+
+/* Order summary sidebar */
+.order-panel {
+  background: white;
+  border-radius: 20px;
+  padding: 22px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  position: sticky;
+  top: 0;
+}
+
+.order-panel-title { font-size: 16px; font-weight: 800; margin-bottom: 20px; }
+
+.coach-mini {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px;
+  background: var(--bg);
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
+
+.coach-mini-ava {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: var(--green-light);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+}
+
+.coach-mini-ava img { width: 100%; height: 100%; object-fit: cover; }
+.coach-mini-name { font-size: 14px; font-weight: 700; }
+.coach-mini-sub { font-size: 11px; color: var(--mute); margin-top: 2px; }
+
+.os-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 8px 0; border-bottom: 1px solid var(--bg); }
+.os-row:last-of-type { border-bottom: none; }
+.os-lbl { font-size: 12px; color: var(--mute); }
+.os-val { font-size: 12px; font-weight: 600; text-align: right; max-width: 160px; }
+
+.total-row {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: 16px; padding-top: 16px;
+  border-top: 2px solid var(--border);
+}
+
+.total-lbl { font-size: 14px; font-weight: 700; }
+.total-price { font-size: 28px; font-weight: 900; color: var(--green); }
+
+.confirm-btn {
+  width: 100%; margin-top: 16px;
+  padding: 14px;
+  background: linear-gradient(135deg, var(--green), var(--green2));
+  color: white; border: none;
+  border-radius: 14px;
+  font-size: 15px; font-weight: 800;
+  cursor: pointer; font-family: inherit;
+  box-shadow: 0 4px 16px rgba(26,107,58,0.3);
+  transition: opacity 0.15s;
+}
+
+.confirm-btn:hover { opacity: 0.9; }
+.confirm-btn.disabled { background: #e0e0e0; color: #aaa; box-shadow: none; cursor: default; }
+
+/* ─── PACKAGES PANEL ─── */
+.pkg-hero {
+  background: linear-gradient(135deg, #0d3b23, #1a6b3a, #40916c);
+  border-radius: 20px;
+  padding: 28px 32px;
+  margin-bottom: 24px;
+  display: flex; align-items: center; gap: 20px;
+  position: relative; overflow: hidden;
+}
+
+.pkg-hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(45deg, rgba(255,255,255,0.02) 0, rgba(255,255,255,0.02) 1px, transparent 0, transparent 20px);
+}
+
+.pkg-hero-icon { font-size: 48px; z-index: 2; }
+.pkg-hero-text { z-index: 2; }
+.pkg-hero-title { font-size: 26px; font-weight: 900; color: white; }
+.pkg-hero-sub { font-size: 13px; color: rgba(255,255,255,0.7); margin-top: 4px; }
+
+.pkg-tabs {
+  display: flex; gap: 6px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.pkg-tab {
+  padding: 8px 18px;
+  border-radius: 20px;
+  font-size: 13px; font-weight: 500;
+  cursor: pointer;
+  border: 1.5px solid var(--border);
+  background: white;
+  color: var(--mute);
+  transition: all 0.15s;
+}
+
+.pkg-tab.active {
+  background: var(--green);
+  color: white;
+  border-color: var(--green);
+  font-weight: 700;
+}
+
+.pkg-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.pkg-card {
+  background: white;
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: 0 1px 8px rgba(0,0,0,0.06);
+  position: relative;
+}
+
+.pkg-card.featured { border: 1.5px solid var(--green); box-shadow: 0 4px 20px rgba(26,107,58,0.12); }
+
+.pkg-badge-tag {
+  position: absolute; top: -10px; left: 16px;
+  background: var(--green);
+  color: white; font-size: 10px; font-weight: 700;
+  padding: 3px 10px; border-radius: 10px;
+}
+
+.pkg-badge-new-tag { background: var(--amber); }
+
+.pkg-head {
+  display: flex; align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 12px; margin-top: 6px;
+}
+
+.pkg-ico { font-size: 28px; }
+.pkg-name { font-size: 15px; font-weight: 800; }
+.pkg-cat { font-size: 10px; color: var(--green); background: var(--green-light); padding: 2px 8px; border-radius: 6px; font-weight: 600; display: inline-block; margin-top: 3px; }
+.pkg-price { font-size: 22px; font-weight: 900; color: var(--green); }
+.pkg-unit { font-size: 10px; color: var(--mute); }
+
+.pkg-desc { font-size: 12px; color: var(--sub); line-height: 1.6; margin-bottom: 12px; }
+
+.pkg-features { margin-bottom: 12px; }
+.feat-row { display: flex; align-items: flex-start; gap: 6px; margin-bottom: 6px; }
+.feat-ck { font-size: 11px; color: var(--green); font-weight: 800; flex-shrink: 0; }
+.feat-txt { font-size: 12px; color: var(--sub); line-height: 1.4; }
+
+.pkg-chips { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+.pkg-chip { background: #f7f8fa; border-radius: 8px; padding: 4px 8px; font-size: 11px; color: var(--sub); }
+
+.pkg-btns { display: flex; gap: 8px; }
+.pkg-btn-detail {
+  flex: 1; padding: 10px; border-radius: 10px;
+  border: 1.5px solid var(--border); background: white; color: var(--sub);
+  font-size: 12px; font-weight: 600; cursor: pointer; font-family: inherit;
+}
+.pkg-btn-book {
+  flex: 2; padding: 10px; border-radius: 10px;
+  border: none; background: var(--green-light); color: var(--green);
+  font-size: 12px; font-weight: 700; cursor: pointer; font-family: inherit;
+}
+.pkg-btn-book.feat { background: linear-gradient(135deg, var(--green), var(--green2)); color: white; box-shadow: 0 3px 12px rgba(26,107,58,0.25); }
+
+/* FAQ */
+.faq-section { margin-top: 28px; }
+.faq-item { background: white; border-radius: 12px; padding: 0; margin-bottom: 8px; overflow: hidden; box-shadow: 0 1px 6px rgba(0,0,0,0.05); }
+.faq-row { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; cursor: pointer; }
+.faq-q { font-size: 13px; font-weight: 600; flex: 1; padding-right: 8px; }
+.faq-arr { font-size: 18px; color: var(--mute); transition: transform 0.2s; }
+.faq-arr.open { transform: rotate(90deg); color: var(--green); }
+.faq-a { font-size: 12px; color: var(--sub); line-height: 1.6; padding: 0 20px 16px; }
+
+/* ─── CHAT PANEL ─── */
+.chat-layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 0;
+  height: calc(100vh - 58px - 48px);
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+
+.chat-list-col {
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+}
+
+.chat-list-header {
+  padding: 16px;
+  border-bottom: 1px solid var(--border);
+  font-size: 15px; font-weight: 800;
+}
+
+.chat-list-items { flex: 1; overflow-y: auto; }
+
+.chat-list-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: background 0.15s;
+  border-bottom: 1px solid var(--bg);
+}
+
+.chat-list-item:hover { background: var(--bg); }
+.chat-list-item.active { background: var(--green-light); }
+
+.cli-ava {
+  width: 42px; height: 42px;
+  border-radius: 50%;
+  background: var(--green-light);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; flex-shrink: 0;
+}
+
+.cli-name { font-size: 13px; font-weight: 700; }
+.cli-preview { font-size: 11px; color: var(--mute); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px; }
+
+.cli-time { font-size: 10px; color: var(--mute); margin-left: auto; flex-shrink: 0; }
+
+/* Chat window */
+.chat-window {
+  display: flex; flex-direction: column;
+  height: 100%;
+}
+
+.chat-header {
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 12px;
+  flex-shrink: 0;
+}
+
+.chat-header-ava {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: var(--green-light);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+}
+
+.chat-header-name { font-size: 14px; font-weight: 700; }
+.chat-status { font-size: 11px; color: var(--green-mid); }
+.chat-header-actions { margin-left: auto; display: flex; gap: 8px; }
+.chat-action-btn { width: 32px; height: 32px; border-radius: 8px; background: var(--bg); display: flex; align-items: center; justify-content: center; font-size: 15px; cursor: pointer; }
+
+.quick-qs {
+  display: flex; overflow-x: auto; gap: 8px;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--bg);
+  flex-shrink: 0;
+}
+.quick-qs::-webkit-scrollbar { display: none; }
+.quick-q {
+  white-space: nowrap; padding: 6px 12px;
+  background: var(--green-light); border-radius: 12px;
+  font-size: 11px; color: var(--green); font-weight: 500;
+  cursor: pointer; flex-shrink: 0;
+}
+.quick-q:hover { background: var(--green); color: white; }
+
+.chat-msgs {
+  flex: 1; overflow-y: auto;
+  padding: 16px;
+}
+
+.date-sep { text-align: center; margin: 10px 0 16px; }
+.date-sep span { font-size: 10px; color: var(--mute); background: #e8e8e8; padding: 3px 12px; border-radius: 10px; }
+
+.msg-row { display: flex; align-items: flex-end; gap: 8px; margin-bottom: 14px; }
+.msg-row.me { flex-direction: row-reverse; }
+.m-ava { width: 30px; height: 30px; border-radius: 50%; background: var(--green-light); display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; }
+.bubble-w { display: flex; flex-direction: column; max-width: 60%; }
+.msg-row.me .bubble-w { align-items: flex-end; }
+.bubble { padding: 10px 14px; border-radius: 14px; font-size: 13px; line-height: 1.5; }
+.bubble-them { background: #f7f8fa; color: var(--text); border-bottom-left-radius: 4px; }
+.bubble-me { background: var(--green); color: white; border-bottom-right-radius: 4px; }
+.m-time { font-size: 10px; color: var(--mute); margin-top: 3px; }
+
+.chat-input-bar {
+  display: flex; align-items: center; gap: 8px;
+  padding: 12px 16px;
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.cin-input {
+  flex: 1; height: 38px;
+  background: var(--bg); border-radius: 19px;
+  padding: 0 16px; font-size: 13px;
+  border: none; outline: none;
+  font-family: inherit; color: var(--text);
+}
+
+.cin-send {
+  padding: 0 18px; height: 38px;
+  background: var(--green); color: white;
+  border-radius: 19px; border: none;
+  font-size: 13px; font-weight: 700;
+  cursor: pointer; font-family: inherit;
+}
+
+/* ─── MY PROFILE PANEL ─── */
+.my-profile-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.my-profile-sidebar {
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+
+.my-profile-hero {
+  background: linear-gradient(160deg, #0d3b23, #1a6b3a 60%, #2d9a57);
+  padding: 28px 20px 24px;
+  position: relative;
+}
+
+.my-avatar-wrap { position: relative; margin-bottom: 14px; display: inline-block; }
+.my-avatar {
+  width: 72px; height: 72px;
+  border-radius: 18px;
+  background: rgba(255,255,255,0.2);
+  border: 3px solid rgba(255,255,255,0.4);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 32px;
+}
+
+.my-name { font-size: 20px; font-weight: 900; color: white; }
+.my-level { font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 4px; }
+.my-area-tag { display: inline-block; background: rgba(255,255,255,0.15); color: white; font-size: 11px; padding: 4px 10px; border-radius: 10px; font-weight: 500; margin-top: 10px; }
+
+.my-stats {
+  display: flex; background: white;
+  border-bottom: 1px solid var(--border);
+}
+
+.my-stat { flex: 1; text-align: center; padding: 14px 0; }
+.my-stat-num { font-size: 20px; font-weight: 900; color: var(--text); }
+.my-stat-lbl { font-size: 10px; color: var(--mute); }
+.my-stat-div { width: 1px; background: var(--border); margin: 10px 0; }
+
+.menu-section { padding: 8px 0; }
+.menu-item {
+  display: flex; align-items: center;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--bg);
+  cursor: pointer;
+  transition: background 0.15s;
+  gap: 12px;
+}
+.menu-item:hover { background: var(--bg); }
+.menu-item:last-child { border-bottom: none; }
+.menu-ico { font-size: 20px; }
+.menu-lbl { flex: 1; font-size: 14px; color: var(--text); }
+.menu-arr { font-size: 18px; color: #ddd; }
+
+.logout-btn {
+  width: calc(100% - 32px); margin: 10px 16px 16px;
+  padding: 12px;
+  border-radius: 12px;
+  background: #fdecea; color: var(--red);
+  border: none; font-size: 14px; font-weight: 700;
+  cursor: pointer; font-family: inherit;
+}
+
+/* Upcoming bookings */
+.bk-card {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--bg);
+}
+.bk-card:last-child { border-bottom: none; }
+
+.bk-date-blk {
+  background: var(--green-light);
+  border-radius: 12px;
+  padding: 10px 12px;
+  text-align: center; flex-shrink: 0;
+  min-width: 52px;
+}
+
+.bk-month { font-size: 10px; font-weight: 800; color: var(--green); letter-spacing: 1px; }
+.bk-day { font-size: 26px; font-weight: 900; color: var(--text); line-height: 1; }
+.bk-wd { font-size: 10px; color: var(--mute); }
+
+.bk-time { font-size: 15px; font-weight: 800; display: block; }
+.bk-coach { font-size: 12px; color: var(--sub); display: block; }
+.bk-court { font-size: 11px; color: var(--mute); display: block; margin-bottom: 4px; }
+.bk-type-tag { display: inline-block; font-size: 10px; color: var(--green); background: var(--green-light); padding: 2px 8px; border-radius: 6px; font-weight: 600; }
+
+.bk-acts { display: flex; flex-direction: column; gap: 5px; margin-left: auto; }
+.bk-act-btn { padding: 6px 12px; background: var(--bg); border-radius: 8px; font-size: 11px; color: var(--sub); text-align: center; cursor: pointer; border: none; font-family: inherit; }
+.bk-act-btn.danger { background: #fdecea; color: var(--red); }
+
+/* Success Modal */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 999;
+  animation: fadeIn 0.2s;
+}
+@keyframes fadeIn { from { opacity: 0; } }
+
+.success-modal {
+  background: white;
+  border-radius: 24px;
+  padding: 40px 36px;
+  max-width: 400px; width: 90%;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 10px;
+  animation: popIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes popIn { from { transform: scale(0.85); opacity: 0; } }
+
+.suc-circle {
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1a6b3a, #2d9a57);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 20px rgba(26,107,58,0.4);
+  font-size: 28px; color: white;
+  margin-bottom: 8px;
+}
+
+.suc-title { font-size: 24px; font-weight: 900; }
+.suc-sub { font-size: 13px; color: var(--mute); text-align: center; line-height: 1.5; }
+
+.suc-detail {
+  background: var(--green-light);
+  border-radius: 12px;
+  padding: 14px 24px;
+  text-align: center; width: 100%;
+}
+.suc-detail span { display: block; font-size: 13px; font-weight: 600; color: var(--green); }
+
+.suc-btn {
+  width: 100%; padding: 14px;
+  border-radius: 14px; border: none;
+  background: linear-gradient(135deg, var(--green), var(--green2));
+  color: white; font-size: 15px; font-weight: 700;
+  cursor: pointer; font-family: inherit; margin-top: 6px;
+}
+
+/* Scrollbar */
+.sidebar-nav::-webkit-scrollbar { width: 4px; }
+.sidebar-nav::-webkit-scrollbar-track { background: transparent; }
+.sidebar-nav::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+.chat-msgs::-webkit-scrollbar { width: 4px; }
+.chat-msgs::-webkit-scrollbar-thumb { background: #ddd; border-radius: 2px; }
+
+/* Typing indicator */
+.typing-bub { padding: 10px 14px; }
+.dots { display: flex; gap: 4px; align-items: center; }
+.dot { width: 6px; height: 6px; border-radius: 50%; background: #bbb; animation: bounce 1.4s infinite ease-in-out; }
+.dot:nth-child(2) { animation-delay: 0.2s; }
+.dot:nth-child(3) { animation-delay: 0.4s; }
+@keyframes bounce { 0%,80%,100% { transform: scale(0.7); opacity: 0.5; } 40% { transform: scale(1.1); opacity: 1; } }
+
+.pkg-prog { padding: 12px 0; border-bottom: 1px solid var(--bg); }
+.pkg-prog:last-child { border-bottom: none; }
+.pkg-prog-n { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+.pkg-prog-m { font-size: 11px; color: var(--mute); margin-bottom: 8px; }
+.prog-bar { height: 6px; background: #f0f0f0; border-radius: 3px; overflow: hidden; margin-bottom: 4px; }
+.prog-fill { height: 100%; background: linear-gradient(90deg, var(--green), var(--green2)); border-radius: 3px; }
+.prog-txt { font-size: 10px; color: var(--mute); }
+
+/* Notice band */
+.notice-band {
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 11px; color: #92400e;
+  font-weight: 600;
+  margin-bottom: 12px;
+  display: flex; align-items: center; gap: 6px;
+}
+
+/* ─── SUPABASE CONFIG BANNER ─── */
+.config-banner {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
+  background: #f59e0b; color: #451a03;
+  padding: 10px 20px;
+  display: flex; align-items: center; gap: 12px;
+  font-size: 13px; font-weight: 600;
+}
+.config-banner .close-banner { margin-left: auto; cursor: pointer; font-size: 18px; }
+body.has-banner .sidebar, body.has-banner .main { margin-top: 42px; }
+
+/* ─── BOOKING MODAL ─── */
+.booking-modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.55);
+  z-index: 2000; display: flex; align-items: center; justify-content: center;
+}
+.booking-modal {
+  background: white; border-radius: 20px;
+  width: 540px; max-width: 95vw; max-height: 90vh; overflow-y: auto;
+  padding: 32px; animation: popIn 0.25s cubic-bezier(0.16,1,0.3,1);
+}
+.bm-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 22px; }
+.bm-title { font-size: 20px; font-weight: 900; }
+.bm-close { font-size: 24px; cursor: pointer; color: var(--mute); line-height: 1; }
+.bm-coach-bar {
+  display: flex; align-items: center; gap: 12px;
+  background: var(--bg); border-radius: 12px; padding: 14px; margin-bottom: 22px;
+}
+.bm-coach-ava { width: 46px; height: 46px; border-radius: 50%; background: var(--green-light); display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+.bm-coach-name { font-size: 15px; font-weight: 700; }
+.bm-coach-sub { font-size: 11px; color: var(--mute); margin-top: 2px; }
+.bm-price { margin-left: auto; font-size: 20px; font-weight: 900; color: var(--green); }
+.form-sec { font-size: 11px; font-weight: 700; color: var(--mute); letter-spacing: 0.5px; text-transform: uppercase; margin: 18px 0 8px; }
+.form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.form-grp { display: flex; flex-direction: column; gap: 5px; }
+.form-lbl { font-size: 12px; font-weight: 600; color: var(--sub); }
+.form-inp, .form-sel {
+  height: 42px; border: 1.5px solid var(--border); border-radius: 10px;
+  padding: 0 14px; font-size: 13px; color: var(--text);
+  background: white; font-family: inherit; outline: none; transition: border-color 0.15s;
+}
+.form-inp:focus, .form-sel:focus { border-color: var(--green); }
+.form-inp.err { border-color: var(--red); }
+.slot-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.slot-btn {
+  padding: 9px 4px; border: 1.5px solid var(--border); border-radius: 8px;
+  background: white; font-size: 12px; font-weight: 600; color: var(--sub);
+  cursor: pointer; text-align: center; transition: all 0.15s; font-family: inherit;
+}
+.slot-btn:hover { border-color: var(--green-mid); color: var(--green); }
+.slot-btn.sel { background: var(--green); border-color: var(--green); color: white; }
+.slot-btn.taken { background: #f5f5f5; color: #ccc; cursor: default; border-color: #eee; }
+.court-list { display: flex; flex-direction: column; gap: 8px; }
+.court-opt {
+  display: flex; align-items: center; gap: 10px;
+  padding: 11px 14px; border: 1.5px solid var(--border);
+  border-radius: 10px; background: white; cursor: pointer; transition: all 0.15s; font-family: inherit;
+}
+.court-opt:hover { border-color: var(--green-mid); }
+.court-opt.sel { border-color: var(--green); background: var(--green-light); }
+.court-opt-name { font-size: 13px; font-weight: 600; }
+.court-opt-addr { font-size: 11px; color: var(--mute); }
+.court-chk { margin-left: auto; width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 10px; color: transparent; transition: all 0.15s; }
+.court-opt.sel .court-chk { background: var(--green); border-color: var(--green); color: white; }
+.submit-btn-bm {
+  width: 100%; margin-top: 22px; padding: 14px;
+  background: linear-gradient(135deg, var(--green), var(--green2));
+  color: white; border: none; border-radius: 14px;
+  font-size: 15px; font-weight: 800; cursor: pointer; font-family: inherit;
+  box-shadow: 0 4px 16px rgba(26,107,58,0.3); transition: opacity 0.15s;
+}
+.submit-btn-bm:hover { opacity: 0.9; }
+.submit-btn-bm:disabled { background: #e0e0e0; color: #aaa; box-shadow: none; cursor: not-allowed; }
+.bm-err { background: #fdecea; border: 1px solid #f5c6c6; border-radius: 8px; padding: 10px 14px; font-size: 12px; color: var(--red); margin-top: 12px; display: none; }
+.bm-success { text-align: center; padding: 20px 0; display: none; }
+.bm-suc-icon { font-size: 52px; margin-bottom: 10px; }
+.bm-suc-title { font-size: 22px; font-weight: 900; margin-bottom: 8px; }
+.bm-suc-sub { font-size: 13px; color: var(--mute); line-height: 1.6; }
+.bm-suc-detail { background: var(--green-light); border-radius: 12px; padding: 14px; margin: 16px 0; text-align: left; }
+.bm-suc-row { display: flex; gap: 8px; font-size: 13px; margin-bottom: 5px; }
+.bm-suc-row:last-child { margin-bottom: 0; }
+.bm-suc-lbl { color: var(--mute); min-width: 64px; }
+.bm-suc-val { font-weight: 600; }
+.spin { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.4); border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; margin-right: 6px; vertical-align: middle; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ─── ADMIN TABLE ─── */
+.admin-tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
+.admin-tbl th { background: var(--bg); padding: 10px 14px; text-align: left; font-weight: 700; font-size: 11px; color: var(--mute); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border); }
+.admin-tbl td { padding: 12px 14px; border-bottom: 1px solid var(--bg); vertical-align: middle; }
+.admin-tbl tr:last-child td { border-bottom: none; }
+.admin-tbl tr:hover td { background: var(--bg); }
+.sbadge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+.s-pending { background: #fff3cd; color: #856404; }
+.s-confirmed { background: var(--green-light); color: var(--green); }
+.s-cancelled { background: #fdecea; color: var(--red); }
+.confirm-sm { padding: 5px 12px; border-radius: 6px; background: var(--green-light); color: var(--green); border: none; font-size: 11px; font-weight: 700; cursor: pointer; font-family: inherit; }
+.confirm-sm:hover { background: var(--green); color: white; }
+.empty-st { text-align: center; padding: 48px 20px; color: var(--mute); }
+.empty-st-icon { font-size: 40px; margin-bottom: 10px; }
+.coach-book-btn {
+  width: 100%; margin-top: 10px; padding: 8px;
+  background: linear-gradient(135deg, var(--green), var(--green2));
+  color: white; border: none; border-radius: 8px;
+  font-size: 12px; font-weight: 700; cursor: pointer; font-family: inherit;
+}
+.coach-book-btn:hover { opacity: 0.88; }
+</style>
+</head>
+<body>
+
+<!-- ══ SUPABASE CONFIG BANNER ══ -->
+<div class="config-banner" id="config-banner">
+  ✅ Supabase 已连接：kbllubfoxwbcmcgrklgh.supabase.co
+  <span class="close-banner" onclick="document.getElementById('config-banner').style.display='none'">✕</span>
+</div>
+
+<!-- ══ BOOKING MODAL ══ -->
+<div class="booking-modal-overlay" id="booking-modal" style="display:none;" onclick="if(event.target===this)closeBookingModal()">
+  <div class="booking-modal">
+    <!-- Form view -->
+    <div id="bm-form-view">
+      <div class="bm-header">
+        <div class="bm-title">📅 预约课程</div>
+        <div class="bm-close" onclick="closeBookingModal()">✕</div>
+      </div>
+
+      <!-- Coach info bar -->
+      <div class="bm-coach-bar">
+        <div class="bm-coach-ava" id="bm-coach-ava">🎾</div>
+        <div>
+          <div class="bm-coach-name" id="bm-coach-name">James 教练</div>
+          <div class="bm-coach-sub" id="bm-coach-sub">NCAA D1 · UTR 8.3 · McLean VA</div>
+        </div>
+        <div class="bm-price" id="bm-coach-price">$75</div>
+      </div>
+
+      <!-- Step 1: Personal info -->
+      <div class="form-sec">第一步：填写你的信息</div>
+      <div class="form-row-2">
+        <div class="form-grp">
+          <label class="form-lbl">姓名 *</label>
+          <input class="form-inp" id="bm-name" type="text" placeholder="你的中文或英文名">
+        </div>
+        <div class="form-grp">
+          <label class="form-lbl">邮箱 *</label>
+          <input class="form-inp" id="bm-email" type="email" placeholder="用于收取确认邮件">
+        </div>
+      </div>
+      <div class="form-row-2" style="margin-top:10px;">
+        <div class="form-grp">
+          <label class="form-lbl">手机号（可选）</label>
+          <input class="form-inp" id="bm-phone" type="tel" placeholder="+1 xxx-xxx-xxxx">
+        </div>
+        <div class="form-grp">
+          <label class="form-lbl">课程类型 *</label>
+          <select class="form-sel" id="bm-lesson-type">
+            <option value="">请选择</option>
+            <option value="网球入门">网球入门</option>
+            <option value="技术提升">技术提升</option>
+            <option value="运动表现 & 体能">运动表现 & 体能</option>
+            <option value="青少年培训">青少年培训</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Step 2: Date -->
+      <div class="form-sec">第二步：选择日期</div>
+      <div class="form-grp">
+        <label class="form-lbl">选择日期（仅周六可约）</label>
+        <input class="form-inp" id="bm-date" type="date" onchange="loadAvailableSlots()">
+      </div>
+
+      <!-- Step 3: Time -->
+      <div class="form-sec">第三步：选择时间段</div>
+      <div class="slot-grid" id="bm-slots">
+        <div style="grid-column:1/-1;font-size:12px;color:var(--mute);padding:8px 0;">请先选择日期</div>
+      </div>
+
+      <!-- Step 4: Court -->
+      <div class="form-sec">第四步：选择球场</div>
+      <div class="court-list" id="bm-courts">
+        <div class="court-opt" onclick="selectCourtModal(this,'VA Highlands Park','Arlington, VA')">
+          <div>
+            <div class="court-opt-name">VA Highlands Park</div>
+            <div class="court-opt-addr">📍 Arlington, Virginia</div>
+          </div>
+          <div class="court-chk">✓</div>
+        </div>
+        <div class="court-opt" onclick="selectCourtModal(this,'OneLife Fitness – McLean','McLean, VA')">
+          <div>
+            <div class="court-opt-name">OneLife Fitness – McLean</div>
+            <div class="court-opt-addr">📍 McLean, Virginia</div>
+          </div>
+          <div class="court-chk">✓</div>
+        </div>
+      </div>
+
+      <!-- Notes -->
+      <div class="form-sec" style="margin-top:18px;">备注（可选）</div>
+      <div class="form-grp">
+        <textarea class="form-inp" id="bm-notes" rows="2" style="height:auto;padding:10px 14px;resize:none;" placeholder="例如：初学者 / 有受伤史 / 希望重点练发球…"></textarea>
+      </div>
+
+      <!-- Error msg -->
+      <div class="bm-err" id="bm-err"></div>
+
+      <!-- Submit -->
+      <button class="submit-btn-bm" id="bm-submit-btn" onclick="submitBooking()">
+        确认预约 →
+      </button>
+      <div style="font-size:11px;color:var(--mute);text-align:center;margin-top:10px;">
+        预约后你将收到确认邮件 · 24小时内可免费取消
+      </div>
+    </div>
+
+    <!-- Success view -->
+    <div class="bm-success" id="bm-success-view">
+      <div class="bm-suc-icon">🎉</div>
+      <div class="bm-suc-title">预约成功！</div>
+      <div class="bm-suc-sub">确认邮件已发送到你的邮箱，请注意查收</div>
+      <div class="bm-suc-detail">
+        <div class="bm-suc-row"><span class="bm-suc-lbl">教练</span><span class="bm-suc-val" id="suc-coach">—</span></div>
+        <div class="bm-suc-row"><span class="bm-suc-lbl">日期</span><span class="bm-suc-val" id="suc-date">—</span></div>
+        <div class="bm-suc-row"><span class="bm-suc-lbl">时间</span><span class="bm-suc-val" id="suc-time">—</span></div>
+        <div class="bm-suc-row"><span class="bm-suc-lbl">球场</span><span class="bm-suc-val" id="suc-court">—</span></div>
+        <div class="bm-suc-row"><span class="bm-suc-lbl">课程</span><span class="bm-suc-val" id="suc-type">—</span></div>
+      </div>
+      <button style="width:100%;padding:13px;border-radius:12px;background:var(--green-light);color:var(--green);border:none;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;" onclick="closeBookingModal()">
+        返回首页
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">🎾</div>
+    <div class="logo-title">网球教练平台</div>
+    <div class="logo-sub">DC · MD · VA 华人社区</div>
+  </div>
+
+  <div class="sidebar-nav">
+    <div class="nav-section-label">学生端</div>
+    <div class="nav-item active" onclick="showPanel('home', this)">
+      <span class="nav-icon">🏠</span> 首页
+    </div>
+    <div class="nav-item" onclick="showPanel('coaches', this)">
+      <span class="nav-icon">🎾</span> 找教练
+    </div>
+    <div class="nav-item" onclick="showPanel('packages', this)">
+      <span class="nav-icon">📦</span> 课程套餐
+    </div>
+    <div class="nav-item" onclick="showPanel('booking', this)">
+      <span class="nav-icon">📅</span> 预约课程
+    </div>
+    <div class="nav-item" onclick="showPanel('chat', this)">
+      <span class="nav-icon">💬</span> 消息
+      <span class="nav-badge">3</span>
+    </div>
+    <div class="nav-item" onclick="showPanel('profile', this)">
+      <span class="nav-icon">👤</span> 我的
+    </div>
+
+    <div class="nav-section-label" style="margin-top:12px;">快速入口</div>
+    <div class="nav-item" onclick="showPanel('coaches', this); setRegionFilter('dc')">
+      <span class="nav-icon">📍</span> Washington DC
+    </div>
+    <div class="nav-item" onclick="showPanel('coaches', this); setRegionFilter('md')">
+      <span class="nav-icon">📍</span> Maryland
+    </div>
+    <div class="nav-item" onclick="showPanel('coaches', this); setRegionFilter('arlington')">
+      <span class="nav-icon">📍</span> Arlington / McLean
+    </div>
+
+    <div class="nav-section-label" style="margin-top:12px;">管理</div>
+    <div class="nav-item" onclick="showPanel('admin', this)">
+      <span class="nav-icon">🗂️</span> 预约管理后台
+    </div>
+  </div>
+
+  <div class="sidebar-footer">
+    <div class="user-card">
+      <div class="user-avatar">🎓</div>
+      <div>
+        <div class="user-name">小明同学</div>
+        <div class="user-level">初学者 · McLean VA</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN AREA -->
+<div class="main">
+  <!-- Top bar -->
+  <div class="topbar">
+    <div>
+      <div class="topbar-title" id="topbar-title">首页</div>
+    </div>
+    <div class="topbar-right">
+      <div class="topbar-search">
+        <span>🔍</span>
+        <span>搜索教练、地区、课程…</span>
+      </div>
+      <div class="topbar-btn">🔔</div>
+      <div class="topbar-btn">⚙️</div>
+    </div>
+  </div>
+
+  <!-- Page body -->
+  <div class="page-body">
+
+    <!-- ══════ HOME PANEL ══════ -->
+    <div id="panel-home" class="panel active">
+      <div class="home-hero-banner">
+        <div>
+          <div class="hero-greeting">👋 你好，小明！欢迎回来</div>
+          <div class="hero-title">找到最好的<br>DC/MD/VA 网球教练</div>
+          <div class="hero-stats">
+            <div>
+              <div class="hero-stat-num">11</div>
+              <div class="hero-stat-lbl">认证教练</div>
+            </div>
+            <div>
+              <div class="hero-stat-num">6</div>
+              <div class="hero-stat-lbl">服务地区</div>
+            </div>
+            <div>
+              <div class="hero-stat-num">$70+</div>
+              <div class="hero-stat-lbl">起步价格</div>
+            </div>
+          </div>
+        </div>
+        <div class="hero-ball">🎾</div>
+      </div>
+
+      <div class="stats-strip">
+        <div class="stat-card">
+          <div class="stat-card-icon green">📅</div>
+          <div>
+            <div class="stat-card-val">3</div>
+            <div class="stat-card-lbl">待上课程</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-icon amber">🏆</div>
+          <div>
+            <div class="stat-card-val">12</div>
+            <div class="stat-card-lbl">已完成课时</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-icon blue">💰</div>
+          <div>
+            <div class="stat-card-val">$840</div>
+            <div class="stat-card-lbl">累计消费</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-icon purple">⭐</div>
+          <div>
+            <div class="stat-card-val">4.9</div>
+            <div class="stat-card-lbl">平均评分</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-header">
+        <div class="section-title" id="home-coach-section-title">推荐教练</div>
+        <span class="section-link" onclick="showPanel('coaches', document.querySelector('.nav-item:nth-child(2)'))">查看全部 ›</span>
+      </div>
+
+      <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;">
+        <div class="filter-chip active" onclick="filterHomeRegion(this,'all')">全部</div>
+        <div class="filter-chip" onclick="filterHomeRegion(this,'dc')">Washington DC</div>
+        <div class="filter-chip" onclick="filterHomeRegion(this,'md')">Maryland</div>
+        <div class="filter-chip" onclick="filterHomeRegion(this,'arlington')">Arlington</div>
+        <div class="filter-chip" onclick="filterHomeRegion(this,'mclean')">McLean</div>
+        <div class="filter-chip" onclick="filterHomeRegion(this,'fairfax')">Fairfax</div>
+      </div>
+
+      <div class="coach-grid" id="home-coach-grid"></div>
+    </div>
+
+    <!-- ══════ COACHES PANEL ══════ -->
+    <div id="panel-coaches" class="panel">
+      <div class="coach-list-filters">
+        <div class="filter-group" id="region-filter-group">
+          <div class="filter-chip active" onclick="setRegionFilter('all', this)">全部地区</div>
+          <div class="filter-chip" onclick="setRegionFilter('dc', this)">Washington DC</div>
+          <div class="filter-chip" onclick="setRegionFilter('md', this)">Maryland</div>
+          <div class="filter-chip" onclick="setRegionFilter('arlington', this)">Arlington</div>
+          <div class="filter-chip" onclick="setRegionFilter('mclean', this)">McLean</div>
+          <div class="filter-chip" onclick="setRegionFilter('fairfax', this)">Fairfax</div>
+        </div>
+        <div class="search-input-wrap">
+          <span>🔍</span>
+          <input type="text" id="coach-search" placeholder="搜索教练姓名、标签…" oninput="renderCoachList()">
+        </div>
+      </div>
+
+      <div style="display:flex;gap:8px;margin-bottom:16px;">
+        <div class="filter-chip active" onclick="setLangFilter('all', this)">全部语言</div>
+        <div class="filter-chip" onclick="setLangFilter('zh', this)">🗣 中文</div>
+        <div class="filter-chip" onclick="setLangFilter('en', this)">🗣 English</div>
+      </div>
+
+      <div style="font-size:13px;color:var(--mute);margin-bottom:14px;" id="coach-count">共 11 位教练</div>
+
+      <div class="coach-list-grid" id="coach-list-grid"></div>
+    </div>
+
+    <!-- ══════ COACH PROFILE PANEL ══════ -->
+    <div id="panel-coach-profile" class="panel">
+      <div style="margin-bottom:16px;">
+        <span style="font-size:13px;color:var(--green);cursor:pointer;font-weight:600;" onclick="goBackToCoaches()">‹ 返回教练列表</span>
+      </div>
+
+      <div class="profile-layout">
+        <div class="profile-sidebar-card" id="profile-card">
+          <!-- filled by JS -->
+        </div>
+        <div class="profile-main-content" id="profile-main">
+          <!-- filled by JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════ BOOKING PANEL ══════ -->
+    <div id="panel-booking" class="panel">
+      <div class="booking-layout">
+        <div class="booking-steps">
+          <!-- Step 1: Type -->
+          <div class="bk-step-card">
+            <div class="bk-step-head">
+              <div class="step-num">1</div>
+              <div class="step-lbl">选择课程类型</div>
+            </div>
+            <div class="type-grid">
+              <div class="type-card selected" onclick="selectType(this,'网球入门 & 提升','$75',75)">
+                <span class="type-icon">🎾</span>
+                <span class="type-name">网球入门 & 提升</span>
+                <span class="type-desc">1对1私教，60分钟</span>
+                <span class="type-price">$75</span>
+              </div>
+              <div class="type-card" onclick="selectType(this,'运动表现 & 体能','$75',75)">
+                <span class="type-icon">💪</span>
+                <span class="type-name">运动表现 & 体能</span>
+                <span class="type-desc">Strength & Conditioning</span>
+                <span class="type-price">$75</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 2: Date -->
+          <div class="bk-step-card">
+            <div class="bk-step-head">
+              <div class="step-num">2</div>
+              <div class="step-lbl">选择日期</div>
+            </div>
+            <div class="calendar-wrap">
+              <div class="month-nav">
+                <div class="m-arrow" onclick="changeMonth(-1)">‹</div>
+                <span class="m-label" id="bk-month-label">2026年 三月</span>
+                <div class="m-arrow" onclick="changeMonth(1)">›</div>
+              </div>
+              <div class="week-head">
+                <span class="w-lbl">日</span><span class="w-lbl">一</span><span class="w-lbl">二</span><span class="w-lbl">三</span><span class="w-lbl">四</span><span class="w-lbl">五</span><span class="w-lbl">六</span>
+              </div>
+              <div class="cal-grid" id="bk-cal-grid"></div>
+            </div>
+          </div>
+
+          <!-- Step 3: Time -->
+          <div class="bk-step-card">
+            <div class="bk-step-head">
+              <div class="step-num">3</div>
+              <div class="step-lbl">选择时间段</div>
+            </div>
+            <div class="notice-band">⏰ 仅周六开放 · 11:00 AM – 7:00 PM</div>
+            <div class="time-slots-bk">
+              <div class="t-slot-bk" onclick="selectTime(this,'11:00')"><span>11:00</span><span>空闲</span></div>
+              <div class="t-slot-bk" onclick="selectTime(this,'12:00')"><span>12:00</span><span>空闲</span></div>
+              <div class="t-slot-bk" onclick="selectTime(this,'13:00')"><span>13:00</span><span>空闲</span></div>
+              <div class="t-slot-bk" onclick="selectTime(this,'14:00')"><span>14:00</span><span>空闲</span></div>
+              <div class="t-slot-bk" onclick="selectTime(this,'15:00')"><span>15:00</span><span>空闲</span></div>
+              <div class="t-slot-bk" onclick="selectTime(this,'16:00')"><span>16:00</span><span>空闲</span></div>
+              <div class="t-slot-bk" onclick="selectTime(this,'17:00')"><span>17:00</span><span>空闲</span></div>
+              <div class="t-slot-bk" onclick="selectTime(this,'18:00')"><span>18:00</span><span>空闲</span></div>
+              <div class="t-slot-bk" onclick="selectTime(this,'19:00')"><span>19:00</span><span>空闲</span></div>
+            </div>
+          </div>
+
+          <!-- Step 4: Court -->
+          <div class="bk-step-card">
+            <div class="bk-step-head">
+              <div class="step-num">4</div>
+              <div class="step-lbl">选择球场</div>
+            </div>
+            <div class="court-card" onclick="selectCourt(this,'VA Highlands Park','Arlington, VA')">
+              <div>
+                <span class="cc-name">VA Highlands Park</span>
+                <span class="cc-addr">Arlington, Virginia</span>
+                <span class="cc-area">N. Virginia</span>
+              </div>
+              <div class="cc-check">✓</div>
+            </div>
+            <div class="court-card" onclick="selectCourt(this,'OneLife Fitness – McLean','McLean, VA')">
+              <div>
+                <span class="cc-name">OneLife Fitness – McLean</span>
+                <span class="cc-addr">McLean, Virginia</span>
+                <span class="cc-area">N. Virginia</span>
+              </div>
+              <div class="cc-check">✓</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Order Summary -->
+        <div class="order-panel">
+          <div class="order-panel-title">📋 预约小结</div>
+
+          <div class="coach-mini">
+            <div class="coach-mini-ava">🎾</div>
+            <div>
+              <div class="coach-mini-name">James 教练</div>
+              <div class="coach-mini-sub">NCAA D1 · UTR 8.3 · McLean VA</div>
+            </div>
+          </div>
+
+          <div class="os-row">
+            <span class="os-lbl">课程类型</span>
+            <span class="os-val" id="bk-os-type">网球入门 & 提升</span>
+          </div>
+          <div class="os-row">
+            <span class="os-lbl">日期时间</span>
+            <span class="os-val" id="bk-os-datetime">—</span>
+          </div>
+          <div class="os-row">
+            <span class="os-lbl">球场</span>
+            <span class="os-val" id="bk-os-court">—</span>
+          </div>
+
+          <div class="total-row">
+            <span class="total-lbl">应付金额</span>
+            <span class="total-price" id="bk-total-price">$75</span>
+          </div>
+
+          <button class="confirm-btn disabled" id="bk-confirm-btn" onclick="confirmBookingWeb()">
+            确认预约
+          </button>
+
+          <div style="font-size:11px;color:var(--mute);text-align:center;margin-top:12px;">
+            预约后24小时内可免费取消
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════ PACKAGES PANEL ══════ -->
+    <div id="panel-packages" class="panel">
+      <div class="pkg-hero">
+        <div class="pkg-hero-icon">🎾</div>
+        <div class="pkg-hero-text">
+          <div class="pkg-hero-title">课程套餐中心</div>
+          <div class="pkg-hero-sub">多种套餐，灵活选择，为每位学员量身定制</div>
+        </div>
+      </div>
+
+      <div class="pkg-tabs" id="pkg-tabs">
+        <div class="pkg-tab active" onclick="filterPkgTab(this,'all')">全部套餐</div>
+        <div class="pkg-tab" onclick="filterPkgTab(this,'beginner')">🌱 零基础入门</div>
+        <div class="pkg-tab" onclick="filterPkgTab(this,'improve')">🏆 技术提升</div>
+        <div class="pkg-tab" onclick="filterPkgTab(this,'youth')">👦 青少年</div>
+        <div class="pkg-tab" onclick="filterPkgTab(this,'fitness')">💪 体能训练</div>
+      </div>
+
+      <div class="pkg-grid" id="pkg-grid"></div>
+
+      <div class="faq-section">
+        <div class="section-title" style="margin-bottom:14px;">❓ 常见问题</div>
+        <div id="faq-list"></div>
+      </div>
+    </div>
+
+    <!-- ══════ CHAT PANEL ══════ -->
+    <div id="panel-chat" class="panel">
+      <div class="chat-layout">
+        <!-- Coach list -->
+        <div class="chat-list-col">
+          <div class="chat-list-header">消息列表</div>
+          <div class="chat-list-items">
+            <div class="chat-list-item active" onclick="selectChat(this, 'James 教练', '🎾')">
+              <div class="cli-ava">🎾</div>
+              <div style="flex:1;min-width:0;">
+                <div class="cli-name">James 教练</div>
+                <div class="cli-preview">明天的课准备好了吗？</div>
+              </div>
+              <span class="cli-time">刚刚</span>
+            </div>
+            <div class="chat-list-item" onclick="selectChat(this, 'Kevin 教练', '🏆')">
+              <div class="cli-ava">🏆</div>
+              <div style="flex:1;min-width:0;">
+                <div class="cli-name">Kevin 教练</div>
+                <div class="cli-preview">下次课可以安排在周五吗？</div>
+              </div>
+              <span class="cli-time">昨天</span>
+            </div>
+            <div class="chat-list-item" onclick="selectChat(this, '客服助手', '🤖')">
+              <div class="cli-ava">🤖</div>
+              <div style="flex:1;min-width:0;">
+                <div class="cli-name">客服助手</div>
+                <div class="cli-preview">欢迎使用网球教练平台！</div>
+              </div>
+              <span class="cli-time">周一</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chat window -->
+        <div class="chat-window">
+          <div class="chat-header">
+            <div class="chat-header-ava" id="chat-ava">🎾</div>
+            <div>
+              <div class="chat-header-name" id="chat-name">James 教练</div>
+              <div class="chat-status">在线 · 通常5分钟内回复</div>
+            </div>
+            <div class="chat-header-actions">
+              <div class="chat-action-btn">📞</div>
+              <div class="chat-action-btn">📅</div>
+              <div class="chat-action-btn">⋯</div>
+            </div>
+          </div>
+
+          <div class="quick-qs">
+            <div class="quick-q" onclick="sendQuickMsg('您好！我想咨询课程安排')">📅 课程安排</div>
+            <div class="quick-q" onclick="sendQuickMsg('请问价格是多少？')">💰 价格咨询</div>
+            <div class="quick-q" onclick="sendQuickMsg('可以帮我看看我的动作吗？')">🎾 技术问题</div>
+            <div class="quick-q" onclick="sendQuickMsg('我想预约这周六的课')">📅 预约课程</div>
+            <div class="quick-q" onclick="sendQuickMsg('请问在哪个球场上课？')">📍 球场位置</div>
+          </div>
+
+          <div class="chat-msgs" id="chat-msgs">
+            <div class="date-sep"><span>今天</span></div>
+
+            <div class="msg-row">
+              <div class="m-ava">🎾</div>
+              <div class="bubble-w">
+                <div class="bubble bubble-them">你好！我是James教练。很高兴认识你，有什么我可以帮你的吗？</div>
+                <div class="m-time">09:30</div>
+              </div>
+            </div>
+
+            <div class="msg-row">
+              <div class="m-ava">🎾</div>
+              <div class="bubble-w">
+                <div class="bubble bubble-them">我目前在McLean和Arlington一带有开课，每周六11AM-7PM都有空哦 😊</div>
+                <div class="m-time">09:31</div>
+              </div>
+            </div>
+
+            <div class="msg-row me">
+              <div class="bubble-w">
+                <div class="bubble bubble-me">太好了！我是初学者，您擅长教零基础的学生吗？</div>
+                <div class="m-time">09:45</div>
+              </div>
+            </div>
+
+            <div class="msg-row">
+              <div class="m-ava">🎾</div>
+              <div class="bubble-w">
+                <div class="bubble bubble-them">当然！零基础学生是我的强项之一。我会结合运动科学，为你制定个性化训练方案，从握拍、站姿、步法开始，循序渐进 🎾</div>
+                <div class="m-time">09:47</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="chat-input-bar">
+            <input class="cin-input" type="text" id="chat-input" placeholder="输入消息…" onkeydown="if(event.key==='Enter') sendChatMsg()">
+            <button class="cin-send" onclick="sendChatMsg()">发送</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════ MY PROFILE PANEL ══════ -->
+    <div id="panel-profile" class="panel">
+      <div class="my-profile-layout">
+        <div class="my-profile-sidebar">
+          <div class="my-profile-hero">
+            <div class="my-avatar-wrap">
+              <div class="my-avatar">😊</div>
+            </div>
+            <div class="my-name">小明同学</div>
+            <div class="my-level">网球初学者 · 开始学习 3 个月</div>
+            <div class="my-area-tag">📍 McLean, VA</div>
+          </div>
+
+          <div class="my-stats">
+            <div class="my-stat">
+              <div class="my-stat-num">12</div>
+              <div class="my-stat-lbl">课时</div>
+            </div>
+            <div class="my-stat-div"></div>
+            <div class="my-stat">
+              <div class="my-stat-num">3</div>
+              <div class="my-stat-lbl">教练</div>
+            </div>
+            <div class="my-stat-div"></div>
+            <div class="my-stat">
+              <div class="my-stat-num">4.9</div>
+              <div class="my-stat-lbl">评分</div>
+            </div>
+          </div>
+
+          <div class="menu-section">
+            <div class="menu-item"><span class="menu-ico">📅</span><span class="menu-lbl">我的预约</span><span class="menu-arr">›</span></div>
+            <div class="menu-item"><span class="menu-ico">📦</span><span class="menu-lbl">我的套餐</span><span class="menu-arr">›</span></div>
+            <div class="menu-item"><span class="menu-ico">💰</span><span class="menu-lbl">支付记录</span><span class="menu-arr">›</span></div>
+            <div class="menu-item"><span class="menu-ico">⭐</span><span class="menu-lbl">我的评价</span><span class="menu-arr">›</span></div>
+            <div class="menu-item"><span class="menu-ico">❤️</span><span class="menu-lbl">收藏教练</span><span class="menu-arr">›</span></div>
+            <div class="menu-item"><span class="menu-ico">⚙️</span><span class="menu-lbl">账号设置</span><span class="menu-arr">›</span></div>
+          </div>
+
+          <button class="logout-btn">退出登录</button>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:20px;">
+          <div class="content-card">
+            <div class="content-card-title">📅 即将到来的课程</div>
+            <div class="bk-card">
+              <div class="bk-date-blk">
+                <div class="bk-month">MAR</div>
+                <div class="bk-day">22</div>
+                <div class="bk-wd">周六</div>
+              </div>
+              <div style="flex:1">
+                <div class="bk-time">11:00 AM – 12:00 PM</div>
+                <div class="bk-coach">James 教练 · NCAA D1</div>
+                <div class="bk-court">📍 VA Highlands Park, Arlington</div>
+                <span class="bk-type-tag">网球入门</span>
+              </div>
+              <div class="bk-acts">
+                <button class="bk-act-btn">📍 查看地图</button>
+                <button class="bk-act-btn danger">取消</button>
+              </div>
+            </div>
+            <div class="bk-card">
+              <div class="bk-date-blk">
+                <div class="bk-month">MAR</div>
+                <div class="bk-day">29</div>
+                <div class="bk-wd">周六</div>
+              </div>
+              <div style="flex:1">
+                <div class="bk-time">2:00 PM – 3:00 PM</div>
+                <div class="bk-coach">James 教练 · NCAA D1</div>
+                <div class="bk-court">📍 VA Highlands Park, Arlington</div>
+                <span class="bk-type-tag">技术提升</span>
+              </div>
+              <div class="bk-acts">
+                <button class="bk-act-btn">📍 查看地图</button>
+                <button class="bk-act-btn danger">取消</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="content-card">
+            <div class="content-card-title">📦 我的套餐进度</div>
+            <div class="pkg-prog">
+              <div class="pkg-prog-n">10课时入门套餐</div>
+              <div class="pkg-prog-m">James 教练 · 还剩 3 课时</div>
+              <div class="prog-bar"><div class="prog-fill" style="width:70%"></div></div>
+              <div class="prog-txt">已使用 7/10 课时</div>
+            </div>
+          </div>
+
+          <div class="content-card">
+            <div class="content-card-title">📈 学习历史</div>
+            <div style="display:flex;flex-direction:column;gap:10px;">
+              <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--bg);">
+                <div style="width:38px;height:38px;border-radius:50%;background:var(--green-light);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">🎾</div>
+                <div style="flex:1">
+                  <div style="font-size:13px;font-weight:600;">James 教练 · 网球入门</div>
+                  <div style="font-size:11px;color:var(--mute);">2026年3月15日 · VA Highlands Park</div>
+                </div>
+                <div style="text-align:right;">
+                  <div style="font-size:14px;font-weight:800;">$75</div>
+                  <div style="font-size:10px;color:var(--green);cursor:pointer;">写评价 ›</div>
+                </div>
+              </div>
+              <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--bg);">
+                <div style="width:38px;height:38px;border-radius:50%;background:var(--green-light);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">🎾</div>
+                <div style="flex:1">
+                  <div style="font-size:13px;font-weight:600;">James 教练 · 技术提升</div>
+                  <div style="font-size:11px;color:var(--mute);">2026年3月8日 · VA Highlands Park</div>
+                </div>
+                <div style="text-align:right;">
+                  <div style="font-size:14px;font-weight:800;">$75</div>
+                  <div style="font-size:10px;color:var(--mute);">已评价 ⭐4.9</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ══════ ADMIN PANEL ══════ -->
+    <div id="panel-admin" class="panel">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+        <div>
+          <div style="font-size:22px;font-weight:900;">🗂️ 预约管理后台</div>
+          <div style="font-size:13px;color:var(--mute);margin-top:4px;">所有预约记录 · 实时同步自 Supabase</div>
+        </div>
+        <button onclick="loadAdminBookings()" style="padding:10px 20px;background:var(--green-light);color:var(--green);border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;">
+          🔄 刷新
+        </button>
+      </div>
+
+      <!-- Stats row -->
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px;" id="admin-stats">
+        <div class="stat-card"><div class="stat-card-icon amber">📅</div><div><div class="stat-card-val" id="stat-total">—</div><div class="stat-card-lbl">总预约</div></div></div>
+        <div class="stat-card"><div class="stat-card-icon green">✅</div><div><div class="stat-card-val" id="stat-confirmed">—</div><div class="stat-card-lbl">已确认</div></div></div>
+        <div class="stat-card"><div class="stat-card-icon blue">⏳</div><div><div class="stat-card-val" id="stat-pending">—</div><div class="stat-card-lbl">待确认</div></div></div>
+        <div class="stat-card"><div class="stat-card-icon purple">💰</div><div><div class="stat-card-val" id="stat-revenue">—</div><div class="stat-card-lbl">预计收入</div></div></div>
+      </div>
+
+      <!-- Filter bar -->
+      <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;">
+        <div class="filter-chip active" onclick="filterAdminStatus('all',this)">全部</div>
+        <div class="filter-chip" onclick="filterAdminStatus('pending',this)">⏳ 待确认</div>
+        <div class="filter-chip" onclick="filterAdminStatus('confirmed',this)">✅ 已确认</div>
+        <div class="filter-chip" onclick="filterAdminStatus('cancelled',this)">❌ 已取消</div>
+        <div style="margin-left:auto;display:flex;align-items:center;gap:6px;background:white;border:1.5px solid var(--border);border-radius:10px;padding:6px 14px;">
+          <span style="font-size:14px;">🔍</span>
+          <input type="text" id="admin-search" placeholder="搜索学员姓名/邮箱…" oninput="renderAdminTable()" style="border:none;outline:none;font-size:13px;min-width:180px;font-family:inherit;">
+        </div>
+      </div>
+
+      <!-- Table -->
+      <div class="content-card" style="padding:0;overflow:hidden;">
+        <div style="overflow-x:auto;">
+          <table class="admin-tbl" id="admin-table">
+            <thead>
+              <tr>
+                <th>学员</th>
+                <th>联系方式</th>
+                <th>日期 / 时间</th>
+                <th>教练</th>
+                <th>课程</th>
+                <th>球场</th>
+                <th>状态</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="admin-tbody">
+              <tr><td colspan="8"><div class="empty-st"><div class="empty-st-icon">📋</div><div>点击右上角"刷新"加载预约数据</div></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div style="font-size:12px;color:var(--mute);margin-top:12px;text-align:center;">
+        数据存储在 Supabase · 可在 <a href="https://supabase.com/dashboard" target="_blank" style="color:var(--green);">Supabase Dashboard</a> 直接查看和导出
+      </div>
+    </div>
+
+  </div><!-- end page-body -->
+</div><!-- end main -->
+
+<!-- Success Modal -->
+<div id="booking-success-modal" class="modal-overlay" style="display:none;" onclick="if(event.target===this)closeSuccessModal()">
+  <div class="success-modal">
+    <div class="suc-circle">✓</div>
+    <div class="suc-title">预约成功！</div>
+    <div class="suc-sub">您的课程已成功预约，请按时到达球场</div>
+    <div class="suc-detail">
+      <span id="suc-datetime-web">—</span>
+      <span id="suc-court-web">—</span>
+      <span id="suc-price-web">—</span>
+    </div>
+    <button class="suc-btn" onclick="closeSuccessModal()">查看我的预约</button>
+    <button style="width:100%;padding:10px;border:none;background:transparent;color:var(--mute);font-size:13px;cursor:pointer;font-family:inherit;" onclick="closeSuccessModal()">返回首页</button>
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════
+// COACHES DATA
+// ════════════════════════════════
+var COACHES = [
+  { id:1, lang:"🗣 中文 · English", name:"James 教练", badge:"NCAA D1 教练", sub:"NCAA D1 助理教练 · 运动科学在读", price:"$75/时",
+    stats:["🏆 UTR 8.3","🇨🇳 排名151"], location:"McLean, VA", region:"mclean",
+    tags:["网球提升","体能训练","S&C"], gradient:"linear-gradient(135deg,#0d3b23,#2d9a57)",
+    photo: true,
+    bio: "你好！我是 James，现任 NCAA Division I 运动表现与体能助理教练，同时在读运动科学与运动医学专业。我曾是 NCAA D3 大学网球校队成员，职业生涯最高 UTR 8.3，中国网球巡回赛最高排名 151，现已退役。无论你是想从零开始学网球，还是希望在力量、速度、耐力上突破瓶颈，我都能结合专业运动科学为你制定个性化方案。",
+    achievements: ["NCAA D1 运动表现与体能助理教练（现任）","运动科学 & 运动医学在读","NCAA D3 大学网球校队 · 最高 UTR 8.3","中国网球巡回赛最高排名 151，退役运动员","张家港站 男单十六强 · 男双八强","天津市锦标赛 U18/U16/U14 单双打前五","国家二级运动员"],
+    specs: ["网球入门","技术提升","运动表现","体能训练","力量 & 速度","S&C 专项"],
+    courts: [{ name:"VA Highlands Park", addr:"Arlington, Virginia" },{ name:"OneLife Fitness – McLean", addr:"McLean, Virginia" }],
+    avail: [0,0,0,0,0,1,0],
+    utr: "8.3", ranking: "151", cert: "D1"
+  },
+  { id:2, lang:"🗣 中文 · English", name:"Kevin 教练", badge:"ITA 认证", sub:"ITA认证 · 乔治华盛顿大学助理教练", price:"$70/时",
+    stats:["🏆 UTR 8.5","🏛 GWU"], location:"Georgetown, DC", region:"dc",
+    tags:["网球入门","大学备考","技术提升"], gradient:"linear-gradient(135deg,#1a5c2a,#3ab85e)", photo:false,
+    bio:"Hi！我是Kevin，目前担任乔治华盛顿大学网球队助理教练，拥有ITA国际认证资质。专注于帮助学生提升网球技术，尤其擅长服务备战大学校队选拔的学生。",
+    achievements:["ITA 国际教练认证","GWU 网球队助理教练（现任）","NCAA Division I 经验","专注大学备考训练"],
+    specs:["网球入门","大学备考","技术提升","单打战术"],
+    courts:[{name:"GWU 网球中心",addr:"Washington, DC"},{name:"East Potomac Park",addr:"Washington, DC"}],
+    avail:[0,1,0,1,0,1,0], utr:"8.5", ranking:"—", cert:"ITA"
+  },
+  { id:3, lang:"🗣 English", name:"Alex 教练", badge:"PTR 高级", sub:"PTR高级认证 · DC联赛冠军", price:"$75/时",
+    stats:["🏆 UTR 8.3","🏛 DC名教"], location:"Capitol Hill, DC", region:"dc",
+    tags:["成人","休闲","小组课"], gradient:"linear-gradient(135deg,#2a1a6b,#6a4ab8)", photo:false,
+    bio:"Alex is a PTR Senior certified coach and former DC league champion. Specializing in adult recreational players and group lessons.",
+    achievements:["PTR Senior Certification","DC Amateur League Champion","10+ years coaching experience","Group & Private Lessons"],
+    specs:["Adult Beginner","Recreational","Group Lessons","Match Play"],
+    courts:[{name:"East Potomac Tennis Center",addr:"Washington, DC"}],
+    avail:[0,0,1,0,1,1,0], utr:"8.3", ranking:"—", cert:"PTR"
+  },
+  { id:4, lang:"🗣 English", name:"Ryan 教练", badge:"USTA 高性能", sub:"USTA高性能认证 · 前ATP挑战赛选手", price:"$95/时",
+    stats:["🏆 UTR 9.5","⚡ 顶级"], location:"Dupont Circle, DC", region:"dc",
+    tags:["高水平","竞技","赛前备战"], gradient:"linear-gradient(135deg,#4a1a1a,#b83a3a)", photo:false,
+    bio:"Ryan is a former ATP Challenger player with USTA High Performance certification. Ideal for competitive players serious about leveling up.",
+    achievements:["USTA High Performance Certified","Former ATP Challenger Player","Peak UTR 9.5","Tournament Preparation Specialist"],
+    specs:["Advanced Competitive","Tournament Prep","Serve & Volley","Strategy"],
+    courts:[{name:"Rock Creek Tennis Center",addr:"Washington, DC"}],
+    avail:[1,0,1,0,0,1,1], utr:"9.5", ranking:"—", cert:"USTA HP"
+  },
+  { id:5, lang:"🗣 中文 · English", name:"Michael 教练", badge:"USPTA 职业", sub:"USPTA职业教练 · 前大学队主力", price:"$80/时",
+    stats:["🏆 UTR 9.2","📅 教龄10年"], location:"Arlington, VA", region:"arlington",
+    tags:["初学者","技术提升","青少年"], gradient:"linear-gradient(135deg,#1a3a6b,#4a7bc8)", photo:false,
+    bio:"Michael是USPTA职业级教练，拥有10年教学经验，擅长青少年和成人技术培训。",
+    achievements:["USPTA 职业级认证","10年教学经验","前大学网球队主力","青少年训练专家"],
+    specs:["初学者入门","技术系统提升","青少年发展","双打战术"],
+    courts:[{name:"Arlington Tennis Center",addr:"Arlington, VA"}],
+    avail:[0,1,1,0,1,1,0], utr:"9.2", ranking:"—", cert:"USPTA"
+  },
+  { id:6, lang:"🗣 中文 · English", name:"David 教练", badge:"USTA 认证", sub:"USTA认证 · 国家青少年培训中心教练", price:"$75/时",
+    stats:["🏆 UTR 8.1","👦 青少年"], location:"Alexandria, VA", region:"arlington",
+    tags:["青少年","初学者","基础训练"], gradient:"linear-gradient(135deg,#1a4a6b,#3a8bb8)", photo:false,
+    bio:"David专注青少年网球培训，曾任职于国家青少年培训中心，教学耐心细致。",
+    achievements:["USTA 认证教练","国家青少年培训中心（前任）","青少年比赛经验丰富","基础技术扎实"],
+    specs:["青少年发展","零基础入门","基础技术","比赛心理"],
+    courts:[{name:"Alexandria Tennis Club",addr:"Alexandria, VA"}],
+    avail:[0,0,1,1,0,1,0], utr:"8.1", ranking:"—", cert:"USTA"
+  },
+  { id:7, lang:"🗣 中文", name:"Wei 教练", badge:"国家二级", sub:"国家二级教练 · 前北京青年队教练", price:"$70/时",
+    stats:["🏆 UTR 8.0","🇨🇳 中文"], location:"Fairfax, VA", region:"fairfax",
+    tags:["中文授课","青少年","入门提升"], gradient:"linear-gradient(135deg,#1a6b1a,#4ab83a)", photo:false,
+    bio:"Wei教练拥有中国国家二级教练证书，曾执教北京市青年网球队，全程中文授课。",
+    achievements:["中国国家二级教练证书","前北京市青年网球队教练","全中文教学环境","帮助多名学生参加本地比赛"],
+    specs:["中文授课","青少年训练","成人入门","技术纠正"],
+    courts:[{name:"Fairfax Tennis Club",addr:"Fairfax, VA"}],
+    avail:[0,1,0,1,1,1,0], utr:"8.0", ranking:"—", cert:"国家二级"
+  },
+  { id:8, lang:"🗣 English", name:"Sarah 教练", badge:"PTR 认证", sub:"PTR国际认证 · 前WTA巡回赛选手", price:"$90/时",
+    stats:["🏆 UTR 8.8","🌟 五星"], location:"Bethesda, MD", region:"md",
+    tags:["女性友好","竞技提升","成人"], gradient:"linear-gradient(135deg,#6b1a6b,#c84ab7)", photo:false,
+    bio:"Sarah is a former WTA circuit player with PTR International certification. Women-friendly environment, specializing in competitive adult players.",
+    achievements:["PTR International Certified","Former WTA Circuit Player","Women's League Specialist","Empowerment-focused coaching"],
+    specs:["Women's Clinics","Competitive Adults","Match Strategy","Mental Game"],
+    courts:[{name:"Bethesda Tennis Center",addr:"Bethesda, MD"}],
+    avail:[1,0,0,1,0,1,1], utr:"8.8", ranking:"—", cert:"PTR Intl"
+  },
+  { id:9, lang:"🗣 English", name:"Lisa 教练", badge:"USPTA 精英", sub:"USPTA精英级 · 前ACC大学联赛冠军", price:"$85/时",
+    stats:["🏆 UTR 9.0","📅 教龄8年"], location:"Silver Spring, MD", region:"md",
+    tags:["竞技","战术","发球特训"], gradient:"linear-gradient(135deg,#7a4a1a,#d4873a)", photo:false,
+    bio:"Lisa is a USPTA Elite-certified coach and former ACC college champion. 8 years of high-level coaching.",
+    achievements:["USPTA Elite Professional","Former ACC College Champion","Serve Specialist","8 Years Coaching"],
+    specs:["Advanced Technique","Serve Training","Tactical Play","College Prep"],
+    courts:[{name:"Silver Spring Recreation Center",addr:"Silver Spring, MD"}],
+    avail:[0,1,0,0,1,1,0], utr:"9.0", ranking:"—", cert:"USPTA Elite"
+  },
+  { id:10, lang:"🗣 中文 · English", name:"Chen 教练", badge:"ITF 认证", sub:"ITF认证 · 中国网球协会高级教练", price:"$80/时",
+    stats:["🏆 UTR 8.6","🇨🇳 中文"], location:"Rockville, MD", region:"md",
+    tags:["中文授课","专业提升","双打"], gradient:"linear-gradient(135deg,#6b1a1a,#c84a4a)", photo:false,
+    bio:"Chen教练拥有ITF国际认证和中国网球协会高级教练资质，专注双打技术训练。",
+    achievements:["ITF 国际认证","中国网球协会高级教练","双打战术专家","竞技水平提升"],
+    specs:["双打战术","技术精进","中文授课","竞技备战"],
+    courts:[{name:"Rockville Civic Center Tennis",addr:"Rockville, MD"}],
+    avail:[1,0,1,0,0,1,0], utr:"8.6", ranking:"—", cert:"ITF"
+  },
+  { id:11, lang:"🗣 English", name:"Jennifer 教练", badge:"USPTA 精英", sub:"USPTA精英级 · 马里兰大学网球队", price:"$85/时",
+    stats:["🏆 UTR 9.1","🎾 全面型"], location:"College Park, MD", region:"md",
+    tags:["竞技","体能","女性友好"], gradient:"linear-gradient(135deg,#1a6b5a,#3ab8a0)", photo:false,
+    bio:"Jennifer is a USPTA Elite coach and current assistant coach at University of Maryland. Well-rounded with focus on fitness-integrated tennis.",
+    achievements:["USPTA Elite Professional","UMD Tennis Assistant Coach","Fitness-Integrated Training","Women's Empowerment"],
+    specs:["Fitness Tennis","Competitive Training","Women's Program","Athletic Development"],
+    courts:[{name:"UMD Tennis Courts",addr:"College Park, MD"}],
+    avail:[0,1,0,1,0,1,0], utr:"9.1", ranking:"—", cert:"USPTA Elite"
+  }
+];
+
+// ════════════════════════════════
+// STATE
+// ════════════════════════════════
+var currentPanel = 'home';
+var currentRegion = 'all';
+var currentLang = 'all';
+var currentCoachId = 1;
+var previousPanel = 'coaches';
+
+var bkState = {
+  typeName: '网球入门 & 提升',
+  price: 75,
+  date: null,
+  time: null,
+  court: null,
+  courtName: ''
+};
+
+var calState = { year: 2026, month: 2 }; // 0-indexed
+
+// ════════════════════════════════
+// NAV
+// ════════════════════════════════
+var panelTitles = {
+  home: '首页',
+  coaches: '找教练',
+  'coach-profile': '教练详情',
+  booking: '预约课程',
+  packages: '课程套餐',
+  chat: '消息',
+  profile: '我的'
+};
+
+function showPanel(id, navEl) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  var el = document.getElementById('panel-' + id);
+  if (el) el.classList.add('active');
+  currentPanel = id;
+
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  if (navEl) navEl.classList.add('active');
+
+  document.getElementById('topbar-title').textContent = panelTitles[id] || id;
+
+  // Init panels
+  if (id === 'coaches') renderCoachList();
+  if (id === 'home') renderHomeGrid('all');
+  if (id === 'packages') renderPackagesWeb();
+  if (id === 'booking') buildCalendarWeb();
+}
+
+// ════════════════════════════════
+// HOME
+// ════════════════════════════════
+function filterHomeRegion(el, region) {
+  document.querySelectorAll('#panel-home .filter-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  var labels = { all:'推荐教练', dc:'Washington DC 教练', md:'Maryland 教练', arlington:'Arlington 教练', mclean:'McLean 教练', fairfax:'Fairfax 教练' };
+  document.getElementById('home-coach-section-title').textContent = labels[region] || '推荐教练';
+  renderHomeGrid(region);
+}
+
+function renderHomeGrid(region) {
+  var list = region === 'all' ? COACHES : COACHES.filter(c => c.region === region);
+  var grid = document.getElementById('home-coach-grid');
+  grid.innerHTML = list.map(c => coachCardHTML(c)).join('');
+  grid.querySelectorAll('.coach-card-wide').forEach(card => {
+    card.addEventListener('click', () => openCoachProfile(parseInt(card.dataset.id)));
+  });
+}
+
+// ════════════════════════════════
+// COACHES LIST
+// ════════════════════════════════
+function setRegionFilter(region, el) {
+  currentRegion = region;
+  if (el) {
+    document.querySelectorAll('#region-filter-group .filter-chip').forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+  }
+  renderCoachList();
+}
+
+function setLangFilter(lang, el) {
+  currentLang = lang;
+  document.querySelectorAll('#panel-coaches .filter-chip:not(#region-filter-group .filter-chip)').forEach(c => c.classList.remove('active'));
+  if (el) el.classList.add('active');
+  renderCoachList();
+}
+
+function renderCoachList() {
+  var q = (document.getElementById('coach-search') || {value:''}).value.toLowerCase();
+  var filtered = COACHES.filter(c => {
+    var regionOk = currentRegion === 'all' || c.region === currentRegion;
+    var langOk = currentLang === 'all' ||
+      (currentLang === 'zh' && c.lang.includes('中文')) ||
+      (currentLang === 'en' && c.lang.includes('English'));
+    var searchOk = !q || c.name.toLowerCase().includes(q) || c.sub.toLowerCase().includes(q) || c.location.toLowerCase().includes(q) || c.tags.join(' ').toLowerCase().includes(q);
+    return regionOk && langOk && searchOk;
+  });
+
+  document.getElementById('coach-count').textContent = '共 ' + filtered.length + ' 位教练';
+  var grid = document.getElementById('coach-list-grid');
+  if (filtered.length === 0) {
+    grid.innerHTML = '<div style="text-align:center;padding:60px;color:#999;grid-column:1/-1;"><div style="font-size:40px;margin-bottom:12px">🔍</div><div>暂无符合的教练</div></div>';
+    return;
+  }
+  grid.innerHTML = filtered.map(c => coachCardHTML(c)).join('');
+  grid.querySelectorAll('.coach-card-wide').forEach(card => {
+    card.addEventListener('click', () => openCoachProfile(parseInt(card.dataset.id)));
+  });
+}
+
+function coachCardHTML(c) {
+  var imgHtml = c.photo
+    ? '<img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgFBgcGBQgHBgcJCAgJDBMMDAsLDBgREg4THBgdHRsYGxofIywlHyEqIRobJjQnKi4vMTIxHiU2OjYwOiwwMTD/wAARCAAoACgDASIAAhEBAxEB/8QAGwAAAgMBAQEAAAAAAAAAAAAAAAUDBAYCAQf/xAAsEAACAQQBBAECBgMAAAAAAAABAgMABAUREiExBhNBUWEUIjJCUnGhsf/EABUBAQEAAAAAAAAAAAAAAAAAAAAB/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8A8Z0jSLrWbxLSzjLyEZYnhVHuT4FR7V5ZW3UPc3pjWHllcRIgXzHjgDoT+Ky7yjh4q7/tMsgJRHuUeVY+R7j5qr6dqlzpN2t1aSFJAMEHlWHsw8GgLPaW7afcLbXkayRBuSV4zjzz71c0PW7jRb5LiB2MecTRA8JB4P8Ax5pvLdLqMM4VVy4VlDkgjB4qv0+6hbUYJxEjFpF7lWxzxQLSdSbT9VhvYJnjkjOUbPI+PB8GvQ9G1GPUrSO7giIRxgiQFSPbHivOs2ERTF3a3C7VyCM8GvX9P1e20OyW1u4j8wfZ4yDj7vHFAYNB0W30C0Gn21wJYWUyABt8ZOT47j/AHVi6s7W5B2yshByzjnHiujdQ0jtcMuXZY2jGxV/c4yN3J/96rXkCW7SJAhaONyqM6bSwBxk+fBoA/8ASmkra6bLJJPILiMmVFJAOcduKy10/Tdtg01x8LHBO1kGeKsT3rR2VqLcQpJJHvYhSS2TnPP+fWjGnO4YC1QkqIxlm4xzQbV22t2sNvLGtxFBcTKo2g4yQgPiuqtHxOPNULvTuoJtVjZkIkZFEiDaFOBg4GB0r0z4Q/EWkzX1r08kVraFnPYR7gVUAhiM9/kV5bPqN5czGaS5kLk5JDH+qA//9k=" alt="" style="width:100%;height:100%;object-fit:cover;object-position:center 10%;">'
+    : '<div class="coach-img-placeholder">🎾</div>';
+
+  var tagsHtml = c.tags.slice(0,2).map(t => '<span class="ctag">' + t + '</span>').join('');
+
+  return '<div class="coach-card-wide" data-id="' + c.id + '">' +
+    '<div class="coach-img-wrap" style="background:' + c.gradient + ';">' +
+    imgHtml +
+    '<div class="coach-badge">' + c.badge + '</div>' +
+    '<div class="coach-price-tag">' + c.price + '</div>' +
+    '</div>' +
+    '<div class="coach-card-body">' +
+    '<div class="coach-card-name">' + c.name + '</div>' +
+    '<div class="coach-card-sub">' + c.sub + '</div>' +
+    '<div class="coach-tags"><span class="lang-tag">' + c.lang + '</span>' + tagsHtml + '</div>' +
+    '</div></div>';
+}
+
+// ════════════════════════════════
+// COACH PROFILE
+// ════════════════════════════════
+function openCoachProfile(id) {
+  previousPanel = currentPanel;
+  currentCoachId = id;
+  var c = COACHES.find(x => x.id === id);
+  if (!c) return;
+
+  // Sidebar card
+  var imgHtml = c.photo
+    ? '<img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgFBgcGBQgHBgcJCAgJDBMMDAsLDBgREg4THBgdHRsYGxofIywlHyEqIRobJjQnKi4vMTIxHiU2OjYwOiwwMTD/wAARCAAoACgDASIAAhEBAxEB/8QAGwAAAgMBAQEAAAAAAAAAAAAAAAUDBAYCAQf/xAAsEAACAQQBBAECBgMAAAAAAAABAgMABAUREiExBhNBUWEUIjJCUnGhsf/EABUBAQEAAAAAAAAAAAAAAAAAAAAB/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8A8Z0jSLrWbxLSzjLyEZYnhVHuT4FR7V5ZW3UPc3pjWHllcRIgXzHjgDoT+Ky7yjh4q7/tMsgJRHuUeVY+R7j5qr6dqlzpN2t1aSFJAMEHlWHsw8GgLPaW7afcLbXkayRBuSV4zjzz71c0PW7jRb5LiB2MecTRA8JB4P8Ax5pvLdLqMM4VVy4VlDkgjB4qv0+6hbUYJxEjFpF7lWxzxQLSdSbT9VhvYJnjkjOUbPI+PB8GvQ9G1GPUrSO7giIRxgiQFSPbHivOs2ERTF3a3C7VyCM8GvX9P1e20OyW1u4j8wfZ4yDj7vHFAYNB0W30C0Gn21wJYWUyABt8ZOT47j/AHVi6s7W5B2yshByzjnHiujdQ0jtcMuXZY2jGxV/c4yN3J/96rXkCW7SJAhaONyqM6bSwBxk+fBoA/8ASmkra6bLJJPILiMmVFJAOcduKy10/Tdtg01x8LHBO1kGeKsT3rR2VqLcQpJJHvYhSS2TnPP+fWjGnO4YC1QkqIxlm4xzQbV22t2sNvLGtxFBcTKo2g4yQgPiuqtHxOPNULvTuoJtVjZkIkZFEiDaFOBg4GB0r0z4Q/EWkzX1r08kVraFnPYR7gVUAhiM9/kV5bPqN5czGaS5kLk5JDH+qA//9k=" style="width:100%;height:100%;object-fit:cover;object-position:center 10%;">'
+    : '<div class="profile-hero-placeholder">🎾</div>';
+
+  document.getElementById('profile-card').innerHTML =
+    '<div class="profile-hero-img" style="background:' + c.gradient + ';">' + imgHtml + '</div>' +
+    '<div class="profile-stats-row">' +
+    '<div class="profile-stat"><div class="profile-stat-val">' + c.utr + '</div><div class="profile-stat-lbl">最高 UTR</div></div>' +
+    '<div class="profile-stat-div"></div>' +
+    '<div class="profile-stat"><div class="profile-stat-val">' + c.ranking + '</div><div class="profile-stat-lbl">🇨🇳 排名</div></div>' +
+    '<div class="profile-stat-div"></div>' +
+    '<div class="profile-stat"><div class="profile-stat-val">' + c.cert + '</div><div class="profile-stat-lbl">认证</div></div>' +
+    '</div>' +
+    '<div class="profile-info">' +
+    '<div class="profile-name">' + c.name + '</div>' +
+    '<div class="profile-subtitle">' + c.sub + '</div>' +
+    '<div class="profile-price">' + c.price + '</div>' +
+    '<div class="profile-meta-chips">' +
+    '<span class="profile-meta-chip">📍 ' + c.location + '</span>' +
+    '<span class="profile-meta-chip">🗣 ' + c.lang + '</span>' +
+    '</div>' +
+    '<div class="profile-cta-btns">' +
+    '<button class="btn-primary-cta" onclick="showPanel(\'booking\', null)">📅 立即预约</button>' +
+    '<button class="btn-secondary-cta" onclick="showPanel(\'chat\', null)">💬 消息</button>' +
+    '</div></div>';
+
+  // Main content
+  var achHtml = (c.achievements || []).map(a => '<div class="ach-item"><span class="ach-icon">✅</span><span class="ach-text">' + a + '</span></div>').join('');
+  var specHtml = (c.specs || []).map(s => '<span class="spec-tag">' + s + '</span>').join('');
+  var courtHtml = (c.courts || []).map(ct => '<div style="display:flex;gap:8px;padding:10px 0;border-bottom:1px solid var(--bg);"><span>📍</span><div><div style="font-size:13px;font-weight:600;">' + ct.name + '</div><div style="font-size:11px;color:var(--mute);">' + ct.addr + '</div></div></div>').join('');
+
+  var dayNames = ['一','二','三','四','五','六','日'];
+  var weekHtml = dayNames.map((d,i) => {
+    var on = c.avail && c.avail[(i+1)%7];
+    return '<div class="day-cell"><span class="day-lbl">' + d + '</span><div class="day-dot ' + (on ? 'day-on' : 'day-off') + '">' + (on ? '✓' : '✕') + '</div></div>';
+  }).join('');
+
+  document.getElementById('profile-main').innerHTML =
+    '<div class="content-card">' +
+    '<div class="content-card-title">👋 关于我</div>' +
+    '<div class="bio-text" style="font-size:13px;color:var(--sub);line-height:1.8;">' + (c.bio || '') + '</div>' +
+    '</div>' +
+    '<div class="content-card">' +
+    '<div class="content-card-title">🏆 运动履历</div>' + achHtml +
+    '</div>' +
+    '<div class="content-card">' +
+    '<div class="content-card-title">🎯 课程类型</div>' +
+    '<div class="spec-tags">' + specHtml + '</div>' +
+    '</div>' +
+    '<div class="content-card">' +
+    '<div class="content-card-title">💰 课程价格</div>' +
+    '<div class="pricing-table">' +
+    '<div class="pricing-row"><div><div class="pricing-name">单次课程</div><div class="pricing-desc">1对1私教，60分钟</div></div><span class="pricing-price">' + c.price + '</span></div>' +
+    '</div></div>' +
+    '<div class="content-card">' +
+    '<div class="content-card-title">📅 可约时间</div>' +
+    '<div class="week-row" style="gap:16px;">' + weekHtml + '</div>' +
+    '</div>' +
+    '<div class="content-card">' +
+    '<div class="content-card-title">🎾 常用球场</div>' + courtHtml +
+    '</div>';
+
+  showPanel('coach-profile', null);
+  // Keep nav active on coaches
+  document.querySelectorAll('.nav-item').forEach(n => {
+    if (n.textContent.includes('找教练')) n.classList.add('active');
+  });
+}
+
+function goBackToCoaches() {
+  showPanel('coaches', document.querySelector('.nav-item:nth-child(2)'));
+}
+
+// ════════════════════════════════
+// BOOKING
+// ════════════════════════════════
+function selectType(el, name, priceStr, price) {
+  document.querySelectorAll('.type-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  bkState.typeName = name;
+  bkState.price = price;
+  document.getElementById('bk-os-type').textContent = name;
+  updateBookingSummary();
+}
+
+function buildCalendarWeb() {
+  var now = new Date(2026, 2, 1); // March 2026
+  calState.year = now.getFullYear();
+  calState.month = now.getMonth();
+  renderCalendarWeb();
+}
+
+function renderCalendarWeb() {
+  var monthNames = ['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'];
+  document.getElementById('bk-month-label').textContent = calState.year + '年 ' + monthNames[calState.month];
+
+  var grid = document.getElementById('bk-cal-grid');
+  var firstDay = new Date(calState.year, calState.month, 1).getDay();
+  var daysInMonth = new Date(calState.year, calState.month + 1, 0).getDate();
+  var today = new Date();
+
+  var html = '';
+  for (var i = 0; i < firstDay; i++) {
+    html += '<div class="cal-day other-month"></div>';
+  }
+
+  for (var d = 1; d <= daysInMonth; d++) {
+    var date = new Date(calState.year, calState.month, d);
+    var isToday = d === today.getDate() && calState.month === today.getMonth() && calState.year === today.getFullYear();
+    var isSat = date.getDay() === 6;
+    var isPast = date < new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    var dateStr = calState.year + '-' + (calState.month+1) + '-' + d;
+    var cls = 'cal-day';
+    if (isPast) cls += ' disabled';
+    else if (isToday) cls += ' today available';
+    else if (isSat) cls += ' available';
+    else cls += ' disabled';
+    if (bkState.date === dateStr) cls += ' selected';
+
+    var onclick = (isSat && !isPast) ? ' onclick="selectDate(\'' + dateStr + '\', this, \'' + calState.year + '年' + (calState.month+1) + '月' + d + '日\')"' : '';
+    html += '<div class="' + cls + '"' + onclick + '>' + d + '</div>';
+  }
+
+  grid.innerHTML = html;
+}
+
+function changeMonth(delta) {
+  calState.month += delta;
+  if (calState.month > 11) { calState.month = 0; calState.year++; }
+  if (calState.month < 0) { calState.month = 11; calState.year--; }
+  renderCalendarWeb();
+}
+
+function selectDate(dateStr, el, label) {
+  bkState.date = dateStr;
+  bkState.dateLabel = label;
+  document.querySelectorAll('#bk-cal-grid .cal-day.selected').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  updateBookingSummary();
+}
+
+function selectTime(el, time) {
+  document.querySelectorAll('.t-slot-bk').forEach(s => s.classList.remove('selected'));
+  el.classList.add('selected');
+  bkState.time = time;
+  updateBookingSummary();
+}
+
+function selectCourt(el, name, area) {
+  document.querySelectorAll('.court-card').forEach(c => { c.classList.remove('selected'); c.querySelector('.cc-check').classList.remove('on'); });
+  el.classList.add('selected');
+  el.querySelector('.cc-check').classList.add('on');
+  bkState.court = name;
+  bkState.courtName = name;
+  updateBookingSummary();
+}
+
+function updateBookingSummary() {
+  var dtEl = document.getElementById('bk-os-datetime');
+  var courtEl = document.getElementById('bk-os-court');
+  var priceEl = document.getElementById('bk-total-price');
+  var btn = document.getElementById('bk-confirm-btn');
+
+  if (bkState.dateLabel && bkState.time) dtEl.textContent = bkState.dateLabel + ' ' + bkState.time;
+  if (bkState.courtName) courtEl.textContent = bkState.courtName;
+  priceEl.textContent = '$' + bkState.price;
+
+  if (bkState.date && bkState.time && bkState.court) {
+    btn.classList.remove('disabled');
+  } else {
+    btn.classList.add('disabled');
+  }
+}
+
+function confirmBookingWeb() {
+  if (!bkState.date || !bkState.time || !bkState.court) return;
+  document.getElementById('suc-datetime-web').textContent = (bkState.dateLabel || bkState.date) + ' ' + bkState.time;
+  document.getElementById('suc-court-web').textContent = bkState.courtName;
+  document.getElementById('suc-price-web').textContent = '$' + bkState.price;
+  document.getElementById('booking-success-modal').style.display = 'flex';
+}
+
+function closeSuccessModal() {
+  document.getElementById('booking-success-modal').style.display = 'none';
+}
+
+// ════════════════════════════════
+// PACKAGES
+// ════════════════════════════════
+var PACKAGES = [
+  { id:1, cat:'beginner', icon:'🌱', name:'零基础入门', catTag:'零基础', price:'$75', unit:'/课时', desc:'从零开始，系统学习网球基础技术，包括握拍、站姿、基础打法。', feats:['1对1私教，60分钟/次','握拍 & 基础姿势', '底线 & 截击入门','比赛规则讲解'], chips:['适合所有年龄','灵活安排'], featured:false, badge:'' },
+  { id:2, cat:'beginner', icon:'📦', name:'10课时入门套餐', catTag:'超值套餐', price:'$680', unit:'/10课时', desc:'买10送1，系统完成网球入门阶段，配合进度追踪报告。', feats:['共10节课，实际享11节','个人进度跟踪报告','可与家人共享课时','专属学员群支持'], chips:['节省$75','最受欢迎'], featured:true, badge:'🔥 热门' },
+  { id:3, cat:'improve', icon:'🏆', name:'技术提升方案', catTag:'技术进阶', price:'$85', unit:'/课时', desc:'专为有一定基础的学员设计，深度提升技术细节和比赛能力。', feats:['技术录像分析','战术培训 & 比赛策略','发球 & 上网技术','实战对打模拟'], chips:['1-3年经验','适合UTR 4-8'], featured:false, badge:'' },
+  { id:4, cat:'youth', icon:'👦', name:'青少年发展课程', catTag:'青少年', price:'$70', unit:'/课时', desc:'针对8-17岁青少年，寓教于乐，培养良好运动习惯和比赛心态。', feats:['趣味热身游戏','年龄适配教学法','运动习惯培养','可选参加本地比赛'], chips:['年龄8-17岁','家长可旁观'], featured:false, badge:'🆕 新开' },
+  { id:5, cat:'fitness', icon:'💪', name:'网球体能训练', catTag:'体能S&C', price:'$75', unit:'/课时', desc:'结合专业运动科学，提升速度、力量、耐力，优化球场表现。', feats:['运动科学评估','力量 & 爆发力训练','速度 & 敏捷训练','伤病预防方案'], chips:['场外体能提升','运动科学方法'], featured:false, badge:'' },
+  { id:6, cat:'improve', icon:'🎯', name:'赛前备战冲刺', catTag:'竞技备战', price:'$95', unit:'/课时', desc:'赛前集中训练，针对对手分析，制定战术，提升比赛胜率。', feats:['对手录像分析','战术定制','高强度实战','赛前心理调整'], chips:['适合UTR 6+','赛前2-4周'], featured:true, badge:'⚡ 精品' },
+];
+
+var FAQS = [
+  { q:'如何取消或改期？', a:'预约后24小时内可免费取消或改期，超过24小时则收取50%费用。请通过消息功能联系教练协商。' },
+  { q:'课程可以共享给家人吗？', a:'套餐课时支持家庭成员共享，但需在同一账号下管理。单次课程绑定预约人本人。' },
+  { q:'教练提供球拍和球吗？', a:'部分教练可提供备用球拍，球场通常需自带网球。建议提前与教练确认。' },
+  { q:'下雨天怎么处理？', a:'遇到恶劣天气，教练会提前联系学员改期或转至室内球场，不收额外费用。' },
+];
+
+var currentPkgCat = 'all';
+
+function filterPkgTab(el, cat) {
+  currentPkgCat = cat;
+  document.querySelectorAll('.pkg-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  renderPackagesWeb();
+}
+
+function renderPackagesWeb() {
+  var list = currentPkgCat === 'all' ? PACKAGES : PACKAGES.filter(p => p.cat === currentPkgCat);
+
+  document.getElementById('pkg-grid').innerHTML = list.map(p => {
+    var featsHtml = p.feats.map(f => '<div class="feat-row"><span class="feat-ck">✓</span><span class="feat-txt">' + f + '</span></div>').join('');
+    var chipsHtml = p.chips.map(c => '<span class="pkg-chip">' + c + '</span>').join('');
+    return '<div class="pkg-card ' + (p.featured ? 'featured' : '') + '">' +
+      (p.badge ? '<div class="pkg-badge-tag ' + (p.badge.includes('🆕') ? 'pkg-badge-new-tag' : '') + '">' + p.badge + '</div>' : '') +
+      '<div class="pkg-head">' +
+      '<div><span class="pkg-ico">' + p.icon + '</span><div class="pkg-name">' + p.name + '</div><span class="pkg-cat">' + p.catTag + '</span></div>' +
+      '<div style="text-align:right;"><div class="pkg-price">' + p.price + '</div><div class="pkg-unit">' + p.unit + '</div></div>' +
+      '</div>' +
+      '<div class="pkg-desc">' + p.desc + '</div>' +
+      '<div class="pkg-features">' + featsHtml + '</div>' +
+      '<div class="pkg-chips">' + chipsHtml + '</div>' +
+      '<div class="pkg-btns">' +
+      '<button class="pkg-btn-detail">了解详情</button>' +
+      '<button class="pkg-btn-book ' + (p.featured ? 'feat' : '') + '" onclick="showPanel(\'booking\', null)">立即预约</button>' +
+      '</div></div>';
+  }).join('');
+
+  // FAQ
+  document.getElementById('faq-list').innerHTML = FAQS.map((f, i) =>
+    '<div class="faq-item">' +
+    '<div class="faq-row" onclick="toggleFaqWeb(' + i + ', this)">' +
+    '<span class="faq-q">' + f.q + '</span>' +
+    '<span class="faq-arr" id="faq-arr-' + i + '">›</span>' +
+    '</div>' +
+    '<div class="faq-a" id="faq-a-' + i + '" style="display:none;">' + f.a + '</div>' +
+    '</div>'
+  ).join('');
+}
+
+function toggleFaqWeb(i, rowEl) {
+  var ans = document.getElementById('faq-a-' + i);
+  var arr = document.getElementById('faq-arr-' + i);
+  var open = ans.style.display !== 'none';
+  ans.style.display = open ? 'none' : 'block';
+  arr.classList.toggle('open', !open);
+}
+
+// ════════════════════════════════
+// CHAT
+// ════════════════════════════════
+function selectChat(el, name, ava) {
+  document.querySelectorAll('.chat-list-item').forEach(i => i.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('chat-name').textContent = name;
+  document.getElementById('chat-ava').textContent = ava;
+}
+
+function sendQuickMsg(text) {
+  document.getElementById('chat-input').value = text;
+  sendChatMsg();
+}
+
+function sendChatMsg() {
+  var input = document.getElementById('chat-input');
+  var text = input.value.trim();
+  if (!text) return;
+
+  var msgs = document.getElementById('chat-msgs');
+  var now = new Date();
+  var timeStr = now.getHours() + ':' + String(now.getMinutes()).padStart(2,'0');
+
+  msgs.innerHTML += '<div class="msg-row me"><div class="bubble-w"><div class="bubble bubble-me">' + text + '</div><div class="m-time">' + timeStr + '</div></div></div>';
+  input.value = '';
+  msgs.scrollTop = msgs.scrollHeight;
+
+  // Auto reply
+  setTimeout(() => {
+    var replies = ['好的，明白了！😊', '没问题，我这边可以安排。', '好的！期待和你一起打球 🎾', '当然可以，随时欢迎！', '我会提前确认球场的，你放心吧！'];
+    var reply = replies[Math.floor(Math.random() * replies.length)];
+    var now2 = new Date();
+    var t2 = now2.getHours() + ':' + String(now2.getMinutes()).padStart(2,'0');
+    msgs.innerHTML += '<div class="msg-row"><div class="m-ava">🎾</div><div class="bubble-w"><div class="bubble bubble-them">' + reply + '</div><div class="m-time">' + t2 + '</div></div></div>';
+    msgs.scrollTop = msgs.scrollHeight;
+  }, 1000);
+}
+
+// ════════════════════════════════
+// SUPABASE SETUP — Native fetch, no CDN needed
+// ════════════════════════════════
+const SUPABASE_URL = 'https://kbllubfoxwbcmcgrklgh.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_xDL0OkqVVBhRFuYm2GrqZg_o6wBlKCM';
+
+function makeHeaders() {
+  return {
+    'Content-Type': 'application/json',
+    'apikey': SUPABASE_KEY,
+    'Authorization': 'Bearer ' + SUPABASE_KEY
+  };
+}
+
+var supabase = {
+  from: function(table) {
+    var filters = [];
+    var orderClause = '';
+    var api = {
+      select: function() { return api; },
+      eq: function(col, val) { filters.push(col + '=eq.' + encodeURIComponent(val)); return api; },
+      neq: function(col, val) { filters.push(col + '=neq.' + encodeURIComponent(val)); return api; },
+      order: function(col, opts) {
+        orderClause = 'order=' + col + (opts && opts.ascending === false ? '.desc' : '.asc');
+        return api;
+      },
+      insert: function(rows) {
+        var body = Array.isArray(rows) ? rows[0] : rows;
+        return fetch(SUPABASE_URL + '/rest/v1/' + table, {
+          method: 'POST',
+          headers: Object.assign({}, makeHeaders(), { 'Prefer': 'return=minimal' }),
+          body: JSON.stringify(body)
+        }).then(function(r) {
+          if (!r.ok) return r.json().then(function(e) { return { data: null, error: e }; });
+          return { data: null, error: null };
+        }).catch(function(e) { return { data: null, error: { message: e.message } }; });
+      },
+      update: function(updates) {
+        var qs = filters.length ? '?' + filters.join('&') : '';
+        return fetch(SUPABASE_URL + '/rest/v1/' + table + qs, {
+          method: 'PATCH',
+          headers: Object.assign({}, makeHeaders(), { 'Prefer': 'return=minimal' }),
+          body: JSON.stringify(updates)
+        }).then(function(r) {
+          if (!r.ok) return r.json().then(function(e) { return { data: null, error: e }; });
+          return { data: null, error: null };
+        }).catch(function(e) { return { data: null, error: { message: e.message } }; });
+      },
+      then: function(resolve, reject) {
+        var parts = [];
+        if (filters.length) parts.push(filters.join('&'));
+        if (orderClause) parts.push(orderClause);
+        parts.push('limit=500');
+        var qs = '?' + parts.join('&');
+        return fetch(SUPABASE_URL + '/rest/v1/' + table + qs, { headers: makeHeaders() })
+          .then(function(r) {
+            if (!r.ok) return r.json().then(function(e) { return resolve({ data: null, error: e }); });
+            return r.json().then(function(data) { return resolve({ data: data, error: null }); });
+          })
+          .catch(function(e) { return resolve({ data: null, error: { message: e.message } }); });
+      }
+    };
+    return api;
+  }
+};
+
+console.log('✅ Supabase native client ready');
+// Hide config banner
+document.addEventListener('DOMContentLoaded', function() {
+  var b = document.getElementById('config-banner');
+  if (b) b.style.display = 'none';
+});
+
+// ════════════════════════════════
+// BOOKING MODAL STATE
+// ════════════════════════════════
+var bmState = {
+  coachId: null, coachName: '', coachPrice: 75,
+  date: null, time: null, court: null
+};
+var allBookings = []; // for admin
+var adminStatusFilter = 'all';
+
+function openBookingModal(coachId) {
+  var c = COACHES.find(x => x.id === coachId) || COACHES[0];
+  bmState.coachId = c.id;
+  bmState.coachName = c.name;
+  bmState.coachPrice = parseInt(c.price.replace(/[^0-9]/g,'')) || 75;
+  bmState.date = null; bmState.time = null; bmState.court = null;
+
+  document.getElementById('bm-coach-name').textContent = c.name;
+  document.getElementById('bm-coach-sub').textContent = c.sub;
+  document.getElementById('bm-coach-price').textContent = c.price.split('/')[0];
+
+  // Reset form
+  ['bm-name','bm-email','bm-phone','bm-notes'].forEach(id => {
+    var el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  document.getElementById('bm-lesson-type').value = '';
+  document.getElementById('bm-date').value = '';
+  document.getElementById('bm-slots').innerHTML = '<div style="grid-column:1/-1;font-size:12px;color:var(--mute);padding:8px 0;">请先选择日期</div>';
+  document.querySelectorAll('.court-opt').forEach(c => c.classList.remove('sel'));
+  document.getElementById('bm-err').style.display = 'none';
+  document.getElementById('bm-form-view').style.display = 'block';
+  document.getElementById('bm-success-view').style.display = 'none';
+
+  // Set date min to next Saturday
+  var today = new Date();
+  var day = today.getDay();
+  var daysToSat = (6 - day + 7) % 7 || 7;
+  var nextSat = new Date(today);
+  nextSat.setDate(today.getDate() + daysToSat);
+  document.getElementById('bm-date').min = nextSat.toISOString().split('T')[0];
+
+  document.getElementById('booking-modal').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+function closeBookingModal() {
+  document.getElementById('booking-modal').style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+async function loadAvailableSlots() {
+  var dateVal = document.getElementById('bm-date').value;
+  if (!dateVal) return;
+  bmState.date = dateVal;
+  bmState.time = null;
+
+  var d = new Date(dateVal + 'T00:00:00');
+  if (d.getDay() !== 6) {
+    document.getElementById('bm-slots').innerHTML = '<div style="grid-column:1/-1;font-size:12px;color:var(--red);padding:8px 0;">⚠️ 该教练仅周六开放预约，请选择周六日期</div>';
+    return;
+  }
+
+  var slots = ['11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00'];
+  var bookedSlots = [];
+
+  if (supabase) {
+    var { data } = await supabase
+      .from('bookings')
+      .select('booking_time')
+      .eq('booking_date', dateVal)
+      .neq('status', 'cancelled');
+    bookedSlots = (data || []).map(b => b.booking_time);
+  }
+
+  document.getElementById('bm-slots').innerHTML = slots.map(function(s) {
+    var taken = bookedSlots.includes(s);
+    var cls = 'slot-btn' + (taken ? ' taken' : '');
+    var attrs = taken ? 'disabled' : ('onclick="selectSlotModal(this,\'' + s + '\')"');
+    var inner = s + (taken ? '<br><span style=\"font-size:10px;\">已约</span>' : '');
+    return '<button class="' + cls + '" ' + attrs + '>' + inner + '</button>';
+  }).join('');
+}
+
+function selectSlotModal(el, time) {
+  document.querySelectorAll('.slot-btn').forEach(b => b.classList.remove('sel'));
+  el.classList.add('sel');
+  bmState.time = time;
+}
+
+function selectCourtModal(el, name, addr) {
+  document.querySelectorAll('.court-opt').forEach(c => c.classList.remove('sel'));
+  el.classList.add('sel');
+  bmState.court = name;
+}
+
+async function submitBooking() {
+  var name = document.getElementById('bm-name').value.trim();
+  var email = document.getElementById('bm-email').value.trim();
+  var lessonType = document.getElementById('bm-lesson-type').value;
+  var phone = document.getElementById('bm-phone').value.trim();
+  var notes = document.getElementById('bm-notes').value.trim();
+  var errEl = document.getElementById('bm-err');
+
+  // Validate
+  errEl.style.display = 'none';
+  var errors = [];
+  if (!name) errors.push('请填写姓名');
+  if (!email || !email.includes('@')) errors.push('请填写有效的邮箱地址');
+  if (!lessonType) errors.push('请选择课程类型');
+  if (!bmState.date) errors.push('请选择日期');
+  if (!bmState.time) errors.push('请选择时间段');
+  if (!bmState.court) errors.push('请选择球场');
+
+  if (errors.length > 0) {
+    errEl.textContent = '⚠️ ' + errors.join(' · ');
+    errEl.style.display = 'block';
+    return;
+  }
+
+  var btn = document.getElementById('bm-submit-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin"></span>提交中…';
+
+  var bookingData = {
+    student_name: name,
+    student_email: email,
+    student_phone: phone || null,
+    coach_id: null,
+    booking_date: bmState.date,
+    booking_time: bmState.time,
+    lesson_type: lessonType,
+    court: bmState.court,
+    notes: notes || null,
+    status: 'pending'
+  };
+
+  if (supabase) {
+    var { error } = await supabase.from('bookings').insert([bookingData]);
+    if (error) {
+      errEl.textContent = '❌ 提交失败：' + error.message;
+      errEl.style.display = 'block';
+      btn.disabled = false;
+      btn.innerHTML = '确认预约 →';
+      return;
+    }
+  }
+
+  // Show success
+  var dateObj = new Date(bmState.date + 'T00:00:00');
+  var dateStr = dateObj.getFullYear() + '年' + (dateObj.getMonth()+1) + '月' + dateObj.getDate() + '日';
+  document.getElementById('suc-coach').textContent = bmState.coachName;
+  document.getElementById('suc-date').textContent = dateStr;
+  document.getElementById('suc-time').textContent = bmState.time + ' – ' + (parseInt(bmState.time)+1) + ':00';
+  document.getElementById('suc-court').textContent = bmState.court;
+  document.getElementById('suc-type').textContent = lessonType;
+
+  document.getElementById('bm-form-view').style.display = 'none';
+  document.getElementById('bm-success-view').style.display = 'block';
+
+  btn.disabled = false;
+  btn.innerHTML = '确认预约 →';
+}
+
+// ════════════════════════════════
+// ADMIN PANEL
+// ════════════════════════════════
+async function loadAdminBookings() {
+  var tbody = document.getElementById('admin-tbody');
+  tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:30px;color:var(--mute);">加载中…</td></tr>';
+
+  if (!supabase) {
+    tbody.innerHTML = '<tr><td colspan="8"><div class="empty-st"><div class="empty-st-icon">⚙️</div><div style="font-weight:600;margin-bottom:6px;">请先配置 Supabase</div><div style="font-size:12px;">在代码中填入你的 SUPABASE_URL 和 SUPABASE_KEY</div></div></td></tr>';
+    return;
+  }
+
+  var { data, error } = await supabase
+    .from('bookings')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:30px;color:var(--red);">❌ 加载失败：' + error.message + '</td></tr>';
+    return;
+  }
+
+  allBookings = data || [];
+  updateAdminStats();
+  renderAdminTable();
+}
+
+function updateAdminStats() {
+  var total = allBookings.length;
+  var confirmed = allBookings.filter(b => b.status === 'confirmed').length;
+  var pending = allBookings.filter(b => b.status === 'pending').length;
+  var revenue = confirmed * 75;
+
+  document.getElementById('stat-total').textContent = total;
+  document.getElementById('stat-confirmed').textContent = confirmed;
+  document.getElementById('stat-pending').textContent = pending;
+  document.getElementById('stat-revenue').textContent = '$' + revenue;
+}
+
+function filterAdminStatus(status, el) {
+  adminStatusFilter = status;
+  document.querySelectorAll('#panel-admin .filter-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  renderAdminTable();
+}
+
+function renderAdminTable() {
+  var q = (document.getElementById('admin-search') || {value:''}).value.toLowerCase();
+  var filtered = allBookings.filter(b => {
+    var statusOk = adminStatusFilter === 'all' || b.status === adminStatusFilter;
+    var searchOk = !q || b.student_name.toLowerCase().includes(q) || b.student_email.toLowerCase().includes(q);
+    return statusOk && searchOk;
+  });
+
+  var tbody = document.getElementById('admin-tbody');
+  if (filtered.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="8"><div class="empty-st"><div class="empty-st-icon">📋</div><div>暂无预约记录</div></div></td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = filtered.map(b => {
+    var statusClass = { pending:'s-pending', confirmed:'s-confirmed', cancelled:'s-cancelled' }[b.status] || 's-pending';
+    var statusLabel = { pending:'⏳ 待确认', confirmed:'✅ 已确认', cancelled:'❌ 已取消' }[b.status] || b.status;
+    var dateObj = new Date(b.booking_date + 'T00:00:00');
+    var dateStr = (dateObj.getMonth()+1) + '月' + dateObj.getDate() + '日';
+    var actions = b.status === 'pending'
+      ? '<button class="confirm-sm" onclick="confirmBookingAdmin(\'' + b.id + '\')">&#x2705; 确认</button>'
+      : (b.status === 'confirmed' ? '<span style="font-size:11px;color:#999;">已处理</span>' : '—');
+
+    return '<tr>' +
+      '<td><div style="font-weight:600;">' + b.student_name + '</div></td>' +
+      '<td><div style="font-size:12px;">' + b.student_email + '</div>' +
+      (b.student_phone ? '<div style="font-size:11px;color:var(--mute);">' + b.student_phone + '</div>' : '') +
+      '</td>' +
+      '<td><div style="font-weight:600;">' + dateStr + '</div><div style="font-size:12px;color:var(--mute);">' + b.booking_time + '</div></td>' +
+      '<td>James 教练</td>' +
+      '<td><div style="font-size:12px;">' + b.lesson_type + '</div></td>' +
+      '<td><div style="font-size:12px;">' + (b.court || '—') + '</div></td>' +
+      '<td><span class="sbadge ' + statusClass + '">' + statusLabel + '</span></td>' +
+      '<td>' + actions + '</td>' +
+      '</tr>';
+  }).join('');
+}
+
+async function confirmBookingAdmin(id) {
+  if (!supabase) return;
+  var { error } = await supabase.from('bookings').update({ status: 'confirmed' }).eq('id', id);
+  if (!error) {
+    var b = allBookings.find(x => x.id === id);
+    if (b) b.status = 'confirmed';
+    updateAdminStats();
+    renderAdminTable();
+  }
+}
+
+// ════════════════════════════════
+// PATCH: Add booking button to coach cards
+// ════════════════════════════════
+var origCoachCardHTML = coachCardHTML;
+coachCardHTML = function(c) {
+  var html = origCoachCardHTML(c);
+  var btn = '<button onclick="event.stopPropagation();openBookingModal(' + c.id + ')" class="coach-book-btn">📅 立即预约</button>';
+  html = html.replace('</div></div>', btn + '</div></div>');
+  return html;
+};
+
+// ════════════════════════════════
+// PATCH: Admin panel in panelTitles
+// ════════════════════════════════
+panelTitles['admin'] = '预约管理后台';
+
+// ════════════════════════════════
+// INIT
+// ════════════════════════════════
+renderHomeGrid('all');
+renderPackagesWeb();
+buildCalendarWeb();
+</script>
+</body>
+</html>
